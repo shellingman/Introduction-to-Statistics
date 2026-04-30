@@ -61,8 +61,8 @@ Hypothesis Testing
 1. One-sample hypothesis tests
 2. Two-sample hypothesis tests
 3. ANOVA tests
-  a. Tests for normality
-4. Chi-squared tests
+4. Tests for normality
+5. Chi-squared tests
 
 Regression Analysis
 1. Simple linear regression
