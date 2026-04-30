@@ -1,0 +1,94 @@
+---
+title: "STAT1200 Seminar 8: Hypothesis Testing"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Hypothesis Testing I/II/III**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+## Task 1
+
+Use the following code to import the *diamonds* dataset into R from the *ggplot2* package.
+
+You can take a bit of time to re-familiarize yourself with the data.
+
+#### A
+
+```{r, warning=FALSE}
+
+library(ggplot2)
+data(diamonds)
+
+
+?diamonds
+```
+
+#### B
+
+1.  It is widely believed that the **average `price`** of diamonds is \$7000. With 95% confidence, does this assumption hold based on your sample? **Be sure to identify the null and alternative hypotheses and make conclusions from your results** (see above example).
+
+```{r}
+
+```
+
+2.  It is widely believed that the **average `depth`** percentage of diamonds is less than or equal to 60. With 95% confidence, does this assumption hold based on your sample? **Be sure to identify the null and alternative hypotheses and make conclusions from your results** (see above example).
+
+```{r}
+
+```
+
+3.  It is assumed that the variance in the `price` of Ideal `cut` diamonds is greater than or equal to the `price` of Premium `cut` diamonds. With 90% confidence, does this assumption hold based on your sample? **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+```{r}
+
+```
+
+4.  It is widely assumed that the proportion of diamonds with a `color` of D (best) is equal to 0.25. With 99% confidence, does this assumption hold based on your sample? **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+```{r}
+
+
+```
+
+## Task 2
+
+**Continuing to work with the diamonds dataset.**
+
+1.  Conduct an appropriate test with 95% significance, to determine if the of the `depth` of the diamonds are the same across all of the `cuts`. Be sure to check all of the necessary assumptions. **Identify the null and alternative hypotheses for each step and be sure to comment on your findings.**
+
+```{r}
+
+```
+
+2.  It is widely believed that the `clarity` of diamonds is independent of their `cut`. Conduct an appropriate hypothesis test to test the validity of this assumption ($\alpha=0.1$). **Identify the null and alternative hypotheses and be sure to comment on your findings.**
+
+```{r}
+
+```
+
+## Task 3
+
+**Continuing to work with the diamonds dataset.**
+
+**Conduct appropriate hypothesis tests to evaluate the following *alternative hypotheses* based on your sample.**
+
+1.  The mean of the `table` for diamonds with a `cut` E is less than the mean of the `table` for diamonds with a `cut` G. Select $\alpha=0.05$. **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+```{r}
+```
+
+2.  The variance of the `carat` of the diamonds is greater than 0.13. Select $\alpha=0.01$. **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+```{r}
+```
+
+3.  The proportion of Premium `cut` diamonds with a `color` of G is greater than the proportion of Ideal `cut` diamonds with a `color` of F. Select $\alpha=0.05$. **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**

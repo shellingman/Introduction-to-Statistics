@@ -1,0 +1,87 @@
+---
+title: "STAT1200 Seminar 4: Probability"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Probability**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the examples from the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+## Task 1
+
+Use the classical definition of probability to complete the following questions:
+
+1.  Let $A$ = {Black Cards} and $B$ = {Queens} when drawing cards from a standard 52 card deck.
+
+    1.  Are $A$ and $B$ mutually exclusive? Why?
+
+    2.  Calculate $P(A\cup B)$
+
+2.  Let $C$ = {Clubs $\clubsuit$ } and $D$ = {Red Cards} when drawing cards from a standard 52 card deck.
+
+    1.  Are $C$ and $D$ mutually exclusive? Why?
+
+    2.  Calculate $P(C\cup D)$
+
+    3.  Calculate $P(A \cap C)$
+
+3.  What is the probability of drawing two face cards consecutively from a standard 52 card deck?\
+    Hint: conditional probability
+
+## Task 2
+
+1.  Identify the sample space for sum of of spinning one 3 numbered spinner of equal probability (The spinner's possible outcomes are 1, 2, or 3 with equal probabilities of 1/3) and rolling a six-sided die.
+
+2.  Calculate the following probabilities:
+
+    1.  The probability that the sum will be 4 or 7
+
+    2.  The probability that the sum will be even
+
+    3.  The probability **given the spinner lands on a 3** that you obtain a sum of 7 or 8
+
+    4.  Let $A =$ {$4,7$} and $B =$ {$Even~Number$}
+
+        1.  Calculate the probability of A or B ($P(A\cup B)$)
+
+        2.  Calculate the probability of A and B ($P(A\cap B)$)
+
+## Task 3
+
+Suppose $n$ = 50 cats \textbf{randomly selected} and were given three toys, the first toy they played with was recorded. The cats were categorised in two ways, \textit{long haired} or \textit{short haired}. The following cross-tabulation was created:
+
+\centering %\\subfloat\[Decay Channels\]{ %
+
+\rule{4cm}{3cm}
+
+\%
+
+\newcommand{\minitab}[2][l]{\begin{tabular}{#1}#2\end{tabular}}
+
+\%\renewcommand{\multirowsetup}{\centering}
+
+\begin{tabular}{|l|l|l|l|l|} \hline
+        Cat & Ball & Bell & Mouse & Total\\ \hline
+    Long Haired & 5 & 7 & 10 & 22 \\ 
+    Short Haired & 9 & 6 & 13 & 28\\ \hline
+    Total & 14 & 13 & 23 & 50\\ \hline
+      \end{tabular}
+
+\raggedright
+
+Using the \textit{relative frequency} definition of assigning probability:
+
+```         
+  \begin{enumerate}
+      \item What is the probability that \textbf{any} cat chose the mouse?
+      \item What is the probability that a randomly selected cat has long hair?
+      \item What is the probability that a Long Haired cat choose the mouse?
+      \item What is the probability that a Short Haired cat \textbf{did not} choose the mouse?
+  \end{enumerate}
+```

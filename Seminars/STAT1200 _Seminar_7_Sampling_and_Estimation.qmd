@@ -1,0 +1,169 @@
+---
+title: "STAT1200 Seminar 7: Sampling and Estimation"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Sampling and Estimation**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+## Task 1
+
+Use the following code to import the *diamonds* dataset into R from the *ggplot2* package.
+
+You can take a bit of time to re-familiarize yourself with the data.
+
+#### A
+
+```{r, warning=FALSE}
+
+library(ggplot2)
+data(diamonds)
+```
+
+```{r}
+
+?diamonds
+```
+
+#### B
+
+```{r}
+
+library(BSDA)
+library(DescTools)
+
+```
+
+1.  **Assume a known world-wide (population) standard deviation of 4000** ($\sigma=4000$) estimate a 95% confidence interval for the mean of the `price` of the diamonds.
+
+```{r}
+
+```
+
+2.  Estimate a 95% confidence interval for the proportion of diamonds with the `cut` of **Ideal**.
+
+```{r}
+
+```
+
+3.  Assuming that we **do not know** the world-wide standard deviation, estimate a 99% confidence interval for the mean of the `carat` of the diamonds.
+
+```{r}
+
+```
+
+4.  Estimate a 90% confidence interval for the variance of the `carat` of the diamonds.
+
+```{r}
+
+```
+
+5.  Assuming that we **do not know** the world-wide standard deviations, estimate a 90% confidence interval for the differences in the means of the `price` of the diamonds between diamonds with a `cut` of **Ideal** and **Good**. **Comment on your findings.**
+
+```{r}
+
+
+```
+
+6.  Choose **one** of the first four confidence intervals and briefly comment on what the results imply.
+
+\newpage
+
+## Task 2
+
+#### A
+
+Import the *Wages.csv* file into your R environment and take some time to understand the variables (see Data Description below).
+
+```{r}
+
+Wages = read.csv("Wages.csv")
+
+
+```
+
+#### B
+
+1.  Estimate a confidence interval for the the differences in proportions of respondents with the `Job` of **Teacher** and **Biologist**. Select $\alpha=0.10$. **Comment on your findings.**
+
+```{r}
+
+```
+
+2.  Assuming that we do **do not know** the nation-wide standard deviations, estimate a confidence interval for the differences in the means between the `Salary` and `Salary.5` salaries scores. Select $\alpha=0.05$. **Comment on your findings.**
+
+```{r}
+
+
+
+
+```
+
+3.  Assuming that we do **do not know** the nation-wide standard deviations, estimate a confidence interval for the differences in the means of the `Salary` between the respondents who live in **rural** and **Metro** `Location`. Select $\alpha=0.01$. **Comment on your findings.**
+
+```{r}
+
+
+```
+
+4.  Estimate a confidence interval for the variance of the `Age` of the respondents. Select $\alpha=0.05$. **Comment on your findings.**
+
+```{r}
+
+```
+
+5.  Take some time to use confidence intervals to examine different aspects of this sample. Please indicate the significance level you chose.
+
+## Task 3
+
+1.  How many observations $n$, drawn from a random sample will we need to obtain a half confidence interval of 0.66 from a sample with $\sigma = 2.35$?
+
+2.  How many observations $n$, drawn from a random sample will we need to obtain a half confidence interval of 0.5 from a sample with $\sigma = 4.5$?
+
+\newpage
+
+### Data Descriptions
+
+\small
+
+\subsection*{Wages}
+
+This dataset (\textit{Wages.csv}) contains the annual wages and additional information of a sample of 314 respondents from three different Canadian Provinces.
+
+\subsection*{Variables}
+
+\begin{itemize}
+\item \textbf{ID:} Unique identifier for each observation.
+
+\item \textbf{Salary:} Respondent's annual salary (thousands of dollars).
+
+\item \textbf{Salary.5:} Respondent's annual salary 5 years prior to the survey.
+
+\item \textbf{Job:} Employment field of the respondent.
+
+\item \textbf{Location:} If the respondent works in a major centre (metro) or a rural area (rural).
+
+\item \textbf{Province:} Province of employment.
+
+\item \textbf{FatherEducation:} The years of education completed by the respondent's father.
+
+\item \textbf{MotherEducation:} The years of education completed by the respondent's mother.
+
+\item \textbf{GPA:} Grade Point Average of the respondent's last completed education.
+
+\item \textbf{Age:} Respondent's age.
+
+\item \textbf{Experience:} Years of work experience.
+
+\item \textbf{Education:} The years of education completed by the respondent.
+
+\end{itemize}

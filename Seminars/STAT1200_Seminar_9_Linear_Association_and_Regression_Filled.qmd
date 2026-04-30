@@ -1,0 +1,350 @@
+---
+title: "STAT1200 Seminar 9: Linear Association and Regression"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Linear Association** and **Regression I/II/III**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+Import the *Health.csv* dataset to complete the following tasks (data description below):
+
+```{r}
+
+Health = read.csv("Health.csv")
+
+```
+
+## Task 1
+
+Construct a correlation matrix of the numeric variables found in the *Health.csv* data (ignoring `ID`). What are the two highest correlation coefficients? What do you think this implies?
+
+*Hint:*
+
+```{r,message=FALSE,warning=FALSE}
+
+library(dplyr)
+library(ggcorrplot)
+
+iris %>% 
+  select_if(is.numeric) %>% 
+  cor() %>% 
+  round(digits = 2) %>% 
+ggcorrplot(hc.order = TRUE,
+           type = "lower",
+           lab = TRUE,
+           lab_size = 2)
+
+
+
+Health %>% 
+  select_if(is.numeric) %>% 
+  select(-ID) %>% 
+  cor() %>% 
+  round(digits = 2) %>% 
+ggcorrplot(hc.order = TRUE,
+           type = "lower",
+           lab = TRUE,
+           lab_size = 2)
+```
+
+1.  Age and Work Years ($\rho = 0.98$) as the positive highest correlation is not unexpected as people have had more time to work. We probably do not need both of these variables in a regression model.
+2.  Baseline and Post Treatment ($\rho=0.89$) people with a higher baseline score also had a higher post treatment score.
+
+\newpage
+
+## Task 2
+
+Construct the following two linear regression models, interpret their results, and conduct diagnostics on **one** of your models:
+
+1.  Dependent variable (Y): `PostTreatment` & Independent variable (X): `Exercise`.
+
+```{r}
+
+lm2.1 <- lm(PostTreatment ~ Exercise, data = Health)
+summary(lm2.1)
+
+
+```
+
+2.  Dependent variable (Y): `PostTreatment` & Independent variable (X): `HighestSalary`.
+
+```{r}
+
+lm2.2 <- lm(PostTreatment ~ HighestSalary, data = Health)
+summary(lm2.2)
+
+```
+
+**Model 1 description:**
+
+`Exercise` is not significant in this model. Furthermore, a negative adjusted R-squared value and large $p$-value for the $F$-test suggests that this is an extremely poor model.
+
+**Model 2 description:**
+
+The highest salary that a respondent has earned is significant in this model. For a one-unit increase in salary (\$1000) the expected post-treatment health score increases by 0.51142. The intercept is significantly different from zero at 26.60. The adjusted R-squared value suggests that we explaining 24.39% of the variability with this model. Based on the $F$-test, this model is significantly better than an empty model.
+
+#### Diagnostics
+
+```{r,message=FALSE}
+library(car)
+
+# Linearity 
+
+plot(lm2.2$residuals)
+abline(h=0,col="blue")
+
+plot(lm2.2,1)
+
+
+# Normality 
+
+plot(lm2.2,2) # Q-Q plot
+lm2.2.standard <- rstandard(lm2.2) #standardized residuals
+
+# Fail to reject null hypothesis of normality
+shapiro.test(lm2.2.standard)
+
+
+
+# Constant Variance (Homoscedasticity)
+
+plot(lm2.2,3) #Not okay
+
+ncvTest(lm2.2) 
+
+
+
+# Independence
+
+lm2.2.standard <- rstandard(lm2.2) #standardized residuals
+
+plot(lm2.2.standard)
+abline(h=0,col="blue") # Almost Looks okay
+
+
+durbinWatsonTest(lm2.2) # Do Not reject null hypothesis of independence 
+
+#vif(lm2.2) # Variance Inflation Factors
+# REMOVE Weight
+
+
+```
+
+## Task 3
+
+Construct a linear regression model with `Age`, `WorkYears`, `Exercise`, `HighestSalary`, `Drinks`, `Family`, `Sector`, `Surgery`, and `Treatment` as the independent variables and `PostTreatment` as the dependent variable. **Comment on the results of your model.**
+
+```{r}
+
+lm1 <- lm(PostTreatment~Age+ WorkYears+ Exercise+ HighestSalary+
+Drinks+ Family+ Sector+ Surgery+ Treatment , data = Health)
+
+summary(lm1)
+
+```
+
+-   Age, Family, and Exercise not significant predictors of the Post Treatment score.
+-   With each year of work, the expected post treatment score decreases by 0.3356
+-   With each increase of \$1000 in the highest salary, the expected post treatment score increases by 0.47395.
+-   With each increase in alcoholic beverages per week the expected post treatment score decreases by 2.58778.
+-   Compared to the reference category of Education, Medical professionals post treatment scores are expected to be 3.97021 higher.
+-   Compared to the reference category of Education, Service professionals and Trades workers have a lower expected post treatment score of 9.04242 and 11.95113.
+-   Compared to the reference category of respondents that have not had surgery, those that have had surgery have a lower expected post treatment score by 12.31473.
+-   Compared to the reference category of treatment A, those that received treatments B and C have a higher expected post treatment score of 9.33052 and 13.71118.
+-   The adjusted R-squared ($\bar{R}^2$) suggests that 72.7% variance is explained.
+-   At least one of the coefficients is significant ($F$-test).
+
+## Task 4
+
+Construct a linear regression model that you think is the best fit for this problem. **Comment on your final model.**
+
+```{r}
+
+lmF <- lm(PostTreatment~WorkYears+ HighestSalary+
+Drinks+ Sector+ Surgery+ Treatment , data = Health)
+
+summary(lmF)
+
+```
+
+*Comments similar to Task 3 or a summary of what is significant and the direction of the significant relationship would be acceptable.*
+
+## Task 5
+
+Conduct the appropriate diagnostic checks on your final model. Does it pass all of the necessary assumptions? Be sure to identify the null hypotheses, alternative hypotheses, and comment on the results of your tests.
+
+```{r}
+library(car) 
+
+
+### Diagnostics ###
+
+
+## Linearity ##
+
+plot(lmF$residuals)
+abline(h=0,col="blue")
+
+plot(lmF,1)
+
+# Appears to hold #
+
+## Normality ##
+
+plot(lmF,2) # Q-Q plot
+lmF.standard <- rstandard(lmF) #standardized residuals
+
+# null hypothesis of normality
+shapiro.test(lmF.standard)
+
+# Normality holds #
+
+## Constant Variance (Homoscedasticity) ##
+
+plot(lmF,3) #Okay
+
+ncvTest(lmF) #pass the test 
+
+# Constant variance
+
+## Independence ##
+
+plot(lmF.standard)
+abline(h=0,col="blue") 
+
+
+durbinWatsonTest(lmF) # Fail to reject null hypothesis of independence 
+
+vif(lmF) # Variance Inflation Factors
+# No problems
+
+```
+
+**Overall, the model passes the necessary assumptions and meaningful inferences can be made.**
+
+## Task 6
+
+There is a model that works well for this problem but has an interaction term. Try to identify this model and perform the necessary diagnostic checks.
+
+```{r}
+
+# Final Model #
+
+lm6 <- lm(PostTreatment~ WorkYears+ HighestSalary+
+Drinks+ Sector+ Surgery+ Treatment + WorkYears:Sector , data = Health)
+
+summary(lm6)
+
+```
+
+```{r}
+### Diagnostics ###
+
+
+## Linearity ##
+
+plot(lm6$residuals)
+abline(h=0,col="blue")
+
+plot(lm6,1)
+
+# Appears to hold #
+
+## Normality ##
+
+plot(lm6,2) # Q-Q plot
+lm6.standard <- rstandard(lm6) #standardized residuals
+
+# null hypothesis of normality
+shapiro.test(lm6.standard)
+
+# Normality holds #
+
+## Constant Variance (Homoscedasticity) ##
+
+plot(lm6,3) #Okay
+
+ncvTest(lm6) #pass the test 
+
+# Constant variance
+
+## Independence ##
+
+plot(lm6.standard)
+abline(h=0,col="blue") 
+
+
+durbinWatsonTest(lm6) # Fail to reject null hypothesis of independence 
+
+vif(lm6) # Variance Inflation Factors
+```
+
+\newpage
+
+### Interaction Example
+
+```{r}
+
+library(ggplot2)
+
+X1 = rnorm(77,1,1)
+X2 = factor(rbinom(77,1,0.5))
+Y = X1 + runif(77,1,2) + X1*as.numeric(X2)
+
+
+
+df3 <- data.frame(Y, X1 , X2 )
+
+ggplot(data = df3, mapping = aes(y = Y, x = X1))+
+         geom_point() +
+         geom_smooth(method = "lm")+
+  labs(title = "Effect of X1 on Y")
+
+
+ggplot(data = df3, mapping = aes(y = Y, x = X1, color = X2))+
+         geom_point() +
+         geom_smooth(method = "lm")+
+  labs(title = "Effect of Second Independent Variable and Interaction")
+
+lmExtra <- lm(Y~X1*X2,data = df3)
+summary(lmExtra)
+
+```
+
+Positive *modulation* on X1 when moving from category 0 to category 1 in X2.
+
+\newpage
+
+## Data Descriptions
+
+#### Health
+
+```{=latex}
+
+This dataset (\textit{Health.csv}) contains health measures and potentially influential factors from a study of 377 individuals. 
+\subsection*{Variables}
+\begin{itemize}
+    \item \textbf{ID:} Unique identifier for each observation.
+    \item \textbf{Baseline:} Baseline health score (0-100) 0 (worst) and 100 (best).
+    \item \textbf{Treatment:} Which treatment the subject received.
+    \item \textbf{Job:} Employment field of the respondent.
+    \item \textbf{PostTreatment:} Health score (0-100) after receiving the treatment.
+    \item \textbf{Age:} Age at the time of treatment.
+    \item \textbf{WorkYears:} The years of employment completed by the subject.
+    \item \textbf{Exercise:} Average weekly hours of exercise completed by the subject.
+    \item \textbf{HighestSalary:} The highest annual salary the subject has earned (in thousands).
+    \item \textbf{Drinks:} Average number of alcoholic drinks the subject consumes in a week.
+    \item \textbf{Family:} Number of family members living within 20 kilometres of the subject. 
+    \item \textbf{Sector:} The subject's main employment sector.
+    \item \textbf{Surgery:} Has the subject had surgery of any kind before or not.
+\end{itemize}
+```

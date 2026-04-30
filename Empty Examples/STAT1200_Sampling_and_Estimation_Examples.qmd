@@ -1,0 +1,362 @@
+---
+title: "STAT1200 Sampling and Estimation Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+#### Packages
+
+```{r packages}
+rm(list = ls()) #Remove all objects from the workspace
+
+if(!require(BSDA)) install.packages("BSDA")
+library(BSDA)
+if(!require(DescTools)) install.packages("DescTools")
+library(DescTools)
+
+```
+
+Assume a population standard deviation of 68 for *hp*.
+
+```{r cars-CI}
+
+#Using formula from slides:
+
+mean.hp <- mean(mtcars$hp)
+
+Lower.95 <- mean.hp - qnorm(p=(0.05/2),lower.tail = FALSE)*(68/sqrt(nrow(mtcars)))
+Upper.95 <- mean.hp + qnorm(p=(0.05/2),lower.tail = FALSE)*(68/sqrt(nrow(mtcars)))
+
+#Using the BSDA package:
+?z.test()
+HP.CI <- z.test(mtcars$hp,sigma.x = 68,conf.level = 0.95)
+HP.CI$conf.int
+
+
+
+```
+
+## Example 1 from slides
+
+```{r CI-ex1}
+
+data("mtcars")
+
+xbar = mean(mtcars$mpg)
+
+n = nrow(mtcars)
+
+# Lower.95 <- xbar - 0.69847*(6/sqrt(n))
+# Upper.95 <- mean.hp + 0.69847*(6/sqrt(n))
+
+
+# 95% C.I.
+
+Ex1.1 <- z.test(mtcars$mpg,sigma.x = 6,conf.level = 0.95)
+Ex1.1$conf.int
+
+
+# 99% C.I.
+
+Ex1.2 <- z.test(mtcars$mpg,sigma.x = 6,conf.level = 0.99)
+Ex1.2$conf.int
+```
+
+Finite population correction factor:
+
+```{r}
+set.seed(123)
+library(dplyr)
+
+
+random.flowers <- iris %>%
+  sample_n(10, replace = FALSE)
+random.flowers
+
+petal.width.mean <- mean(random.flowers$Petal.Width)
+
+Lower.95 <- petal.width.mean - qnorm(p=0.05/2,lower.tail=FALSE)*(sd(iris$Petal.Width)/sqrt(length(random.flowers)))*
+  sqrt((nrow(iris) - nrow(random.flowers))/(nrow(iris)-1))
+
+Upper.95 <- petal.width.mean + qnorm(p=0.05/2,lower.tail=FALSE)*(sd(iris$Petal.Width)/sqrt(length(random.flowers)))*
+  sqrt((nrow(iris) - nrow(random.flowers))/(nrow(iris)-1))
+  
+  
+Results <- list(Lower=Lower.95,Mean=petal.width.mean,Upper=Upper.95)
+Results
+```
+
+## Example 2 from slides
+
+```{r FPC}
+
+
+
+
+```
+
+Plotting distributions
+
+```{r}
+
+
+# Load the ggplot2 library
+library(ggplot2)
+
+# Set the degrees of freedom for the t-distributions
+df1 <- 3  # Degrees of freedom for the first t-distribution
+df2 <- 10 # Degrees of freedom for the second t-distribution
+
+# Generate data for the standard normal distribution
+x <- seq(-4, 4, length=1000)
+std_normal <- dnorm(x)
+
+# Generate data for the two t-distributions
+t_dist1 <- dt(x, df = df1)
+t_dist2 <- dt(x, df = df2)
+
+# Create a data frame for plotting
+data <- data.frame(x = x, std_normal = std_normal, t_dist1 = t_dist1, t_dist2 = t_dist2)
+
+# Create the plot
+plot <- ggplot(data, aes(x)) +
+  geom_line(aes(y = std_normal, color = "Standard Normal"), size = 1) +
+  geom_line(aes(y = t_dist1, color = "t-distribution (df=3)"), size = 1) +
+  geom_line(aes(y = t_dist2, color = "t-distribution (df=10)"), size = 1) +
+  labs(
+    title = "Standard Normal Distribution vs. t-distributions",
+    x = "x",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  scale_color_manual(
+    values = c("Standard Normal" = "blue", "t-distribution (df=3)" = "red", "t-distribution (df=10)" = "green")
+  )
+
+# Display the plot
+print(plot)
+
+
+```
+
+### Unknown sigma
+
+```{r hp}
+
+#Using formula from slides:
+
+?qt()
+
+mean.hp <- mean(mtcars$hp)
+
+Lower.95.A <- mean.hp - qt(0.05/2,df=nrow(mtcars)-1,lower.tail = FALSE)*(sd(mtcars$hp)/sqrt(nrow(mtcars)))
+
+Upper.95.A <- mean.hp + qt(0.05/2,df=nrow(mtcars)-1,lower.tail = FALSE)*(sd(mtcars$hp)/sqrt(nrow(mtcars)))
+
+
+#Using the t.test
+?t.test()
+
+HP.CI.A <- t.test(mtcars$hp,conf.level = 0.95)
+HP.CI.A$conf.int
+
+
+
+
+```
+
+## Example 3 from slides
+
+```{r petals-unknown-sigma}
+
+
+
+
+```
+
+### proprtions
+
+Proportion of cars with 6 cylinders
+
+```{r cars-cyl}
+
+#Calculate the sample proportion
+cyl.prop <- sum(as.numeric(mtcars$cyl == 6))/nrow(mtcars)
+
+cyl.prop.lower.90 <- cyl.prop - qnorm(p=0.10/2,lower.tail=FALSE)*sqrt((cyl.prop*(1-cyl.prop))/nrow(mtcars))
+
+cyl.prop.upper.90 <- cyl.prop + qnorm(p=0.10/2,lower.tail=FALSE)*sqrt((cyl.prop*(1-cyl.prop))/nrow(mtcars))
+
+
+#Or using prop.test()
+?prop.test()
+
+cyl.prop.test <- prop.test(sum(as.numeric(mtcars$cyl == 6)),nrow(mtcars), conf.level=0.9) 
+cyl.prop.test$conf.int
+
+```
+
+## Example 4 from slides
+
+```{r fav-colours}
+
+Colours <- c('red', 'red', 'blue', 'green', 'green', 'orange', 'red', 'orange', 'yellow', 'green', 'red', 'orange')
+
+
+
+
+
+```
+
+### Variance
+
+```{r chi-squared}
+
+
+# defining degrees of freedom
+df = 5
+  
+# calculating for the values in the interval [0,5]
+print ("Calculating for the values [0,5]")
+pchisq(5, df = df,lower.tail = TRUE)
+  
+# calculating for the values in the interval [5,inf)
+print ("Calculating for the values [5,inf)")
+pchisq(5, df = df,lower.tail = FALSE)
+
+
+```
+
+```{r chi-squared-plot}
+
+
+
+# Create a sequence of x values
+x <- seq(0, 20, length.out = 1000)
+
+# Create a plot with 8 chi-squared densities
+plot(x, dchisq(x, df = 1), type = "l", col = "red", lwd = 2, ylim = c(0, 0.5), 
+     xlab = "x", ylab = "Density", main = "Chi-Squared Distributions")
+
+for (df in 2:8) {
+  lines(x, dchisq(x, df = df), col = rainbow(8)[df], lwd = 2)
+}
+
+# Add a legend
+legend("topright", legend = c("df = 1", "df = 2", "df = 3", "df = 4", "df = 5", "df = 6", "df = 7", "df = 8"),
+       col = rainbow(8), lwd = 2, cex = 0.8)
+
+
+```
+
+```{r var-CI}
+
+
+var(mtcars$hp)
+
+VarCI(mtcars$hp,method = "classic",conf.level = 0.95)
+
+
+
+```
+
+## Example 5 from slides
+
+```{r var-CI-example}
+
+
+# VarCI(iris$Petal.Length,method = "classic", conf.level = 0.95) # Use this one!!
+
+
+
+```
+
+Sample sizes
+
+```{r sample-sizes}
+
+library(EnvStats)
+
+sigma <- 1.2
+E <- 0.5
+
+
+#Own code
+n_needed <- ((qnorm(p=0.05/2,lower.tail=FALSE)*sigma)/E)^2
+n_needed
+
+#Using function
+ciNormN(E,sigma,conf.level = 0.95) # Use this one!
+
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+
+E <- 0.25
+sigma <- 3.3
+alpha <- 0.05 #=> C.I. is 95%
+
+n_req <- ((qnorm(p=alpha/2,lower.tail=FALSE)*sigma)/E)^2
+
+n_req
+
+ciNormN(E,sigma,conf.level = 0.95)
+
+
+
+```
+
+Differences in average hp between cars with 4 and 6 cylinders
+
+```{r hp-cyl}
+
+library(DescTools)
+
+data("mtcars")
+
+MeanDiffCI(mtcars$hp[mtcars$cyl == 4],mtcars$hp[mtcars$cyl == 6],conf.level = 0.95,
+  paired = FALSE)
+
+
+
+```
+
+## Example 7 from slides
+
+```{r petal-lenght-diff}
+
+data("iris")
+
+MeanDiffCI(iris$Petal.Length[iris$Species == "setosa"],iris$Petal.Length[iris$Species == "versicolor"],conf.level = 0.90, paired = FALSE, method = "classic")
+
+
+```
+
+## Example 8 from slides
+
+```{r}
+
+?prop.test()
+
+x1 <- 0.25*52
+x2 <- 0.35*60
+
+n1 <- 52
+n2 <- 60
+
+
+CI.Prop.diff<- prop.test(x=c(x1,x2),n=c(n1,n2),conf.level = 0.95,correct=FALSE)
+
+
+CI.Prop.diff$conf.int
+
+
+
+
+```

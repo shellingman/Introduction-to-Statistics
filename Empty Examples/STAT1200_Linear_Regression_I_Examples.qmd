@@ -1,0 +1,191 @@
+---
+title: "STAT1200 Linear Regression I Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+```{r}
+
+
+set.seed(1000)
+library(MASS)
+library(ggplot2)
+
+data("Cars93")
+colnames(Cars93)
+# 
+  
+
+## 1 ## 
+ggplot(data=Cars93,mapping = aes(x = EngineSize, y = Price)) +
+  geom_point()+
+  labs(title = "#1: Scatterplot of Price by Engine Size",
+       x = "Engine Size in Litres",
+       y = "Average Price of the Car")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+## 2 ##
+ggplot(data=Cars93,mapping = aes(x = Horsepower, y = Price)) +
+  geom_point()+
+  labs(title = "#2: Scatterplot of Price by Maximum Horsepower",
+       x = "Maximum Horsepower",
+       y = "Average Price of the Car")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+
+df1 <- data.frame(X = rnorm(50,1,1),
+                  Y = rnorm(50,-1,3))
+
+
+## 3 ##
+ggplot(data=df1,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#3: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+
+X = rnorm(50,0,1)
+Y = -X
+
+df2 <- data.frame(X = X,
+                  Y = Y)
+## 4 ##
+ggplot(data=df2,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#4: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+unif <- runif(50)
+
+df3 <- data.frame(X = X,
+                  Y = X^2+unif)
+
+## 5 ##
+ggplot(data=df3,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#5: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+
+
+
+```
+
+## Example 1 from slides
+
+```{r}
+
+set.seed(1000)
+
+X <- rnorm(55,1,2)
+Z <- rnorm(55,0,0.5)
+Y <- X + Z
+
+plot(X,Y)
+abline(0,0.5,col="red")
+abline(lm(Y~X),col="blue")
+abline(1,-1,col="seagreen")
+text(6,2.8,"A",col = "red")
+text(6,5,"B",col = "blue")
+text(4,-2,"C",col = "seagreen")
+
+```
+
+#### Parameter Estimates
+
+```{r}
+
+
+lm1 <- lm(formula = Y~X)
+summary(lm1)
+
+
+```
+
+# Example 2 from slides
+
+```{r}
+
+Football <- read.csv("Football24.csv")
+colnames(Football)
+
+# 1 #
+lm2A <- lm(League.Points ~ Goals.Scored, data = Football)
+summary(lm2A)
+
+```
+
+```{r}
+
+library(car)
+lm1.standard <- rstandard(lm1)
+hist(lm1.standard)
+
+
+
+plot(lm1$residuals)
+abline(h=0,col="blue")
+
+plot(lm1,1)
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+plot(lm1,2) # Q-Q plot
+lm1.standard <- rstandard(lm1) #standardized residuals
+
+# Do not reject the null hypothesis of normality
+shapiro.test(lm1.standard)
+
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+library(car)
+
+plot(lm1,3) #Looks okay
+
+ncvTest(lm1) #pass the test (do not reject the null)
+
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+lm1.standard <- rstandard(lm1) #standardized residuals
+
+plot(lm1.standard)
+abline(h=0,col="blue") # Looks okay
+
+
+durbinWatsonTest(lm1) # Do not reject null hypothesis of independence 
+
+
+
+```

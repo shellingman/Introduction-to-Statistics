@@ -1,0 +1,116 @@
+---
+title: "STAT1200 Seminar 3: Displaying & Summarizing Data"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Displaying & Summarizing data I** and **Displaying & Summarizing data II**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+## Task 1
+
+Create a new R markdown or Quarto file to answer the following questions. Be sure to include you name and student number. Set the default *knit* to PDF or Word.
+
+Use this file to complete the rest of the tasks in this seminar.
+
+#### Problem Context:
+
+We have a sample of respondents on a survey regarding salaries and other characteristics. We are interested in characterizing the sample ahead of any further analysis.
+
+\newpage
+
+## Task 2
+
+1.  Import the *Wages.csv* file into your R environment and take some time to understand the variables (see Data Description below).
+
+```{r}
+
+    Wages = read.csv("Wages.csv")
+
+
+```
+
+2.  Focus your attention on the `Salary` variable and create the following tables and visualizations **and comment on your findings**:
+
+#### 1. Stem-and-Leaf Display:
+
+#### 2. Histogram:
+
+#### 3. Boxplot:
+
+\newpage
+
+#### 1.
+
+\newpage
+
+#### 2.
+
+\newpage
+
+## Task 3
+
+1.  Continuing with the *Wages.csv* sample but focusing our attention on the `Job` variable, use the following tools to characterize your sample **and comment on your findings**:
+
+    1.  Bar graph (include appropriate labels).
+
+    2.  Sample proportions for each job.
+
+#### Bar graph/Barplot
+
+#### Sample Proportions
+
+2.  Finally, create a comparative box plot for the `salary` variable, split by the `job` variable, include appropriate labels **and comment on your findings.**
+
+#### Comparative Box plot
+
+**Comments:**
+
+## Task 4
+
+Render your solutions as a pdf file.
+
+\newpage
+
+\\section\*{Data Descriptions}
+
+\small
+
+\\subsection\*{Wages}
+
+This dataset (\textit{Wages.csv}) contains the annual wages and additional information of a sample of 314 respondents from three different Canadian Provinces.
+
+\\subsection\*{Variables}
+
+\begin{itemize}
+\item \textbf{ID:} Unique identifier for each observation.
+
+\item \textbf{Salary:} Respondent's annual salary (thousands of dollars).
+
+\item \textbf{Salary.5:} Respondent's annual salary 5 years prior to the survey.
+
+\item \textbf{Job:} Employment field of the respondent.
+
+\item \textbf{Location:} If the respondent works in a major centre (metro) or a rural area (rural).
+
+\item \textbf{Province:} Province of employment.
+
+\item \textbf{FatherEducation:} The years of education completed by the respondent's father.
+
+\item \textbf{MatherEducation:} The years of education completed by the respondent's mother.
+
+\item \textbf{GPA:} Grade Point Average of the respondent's last completed education.
+
+\item \textbf{Age:} Respondent's age.
+
+\item \textbf{Experience:} Years of work experience.
+
+\item \textbf{Education:} The years of education completed by the respondent.
+
+\end{itemize}

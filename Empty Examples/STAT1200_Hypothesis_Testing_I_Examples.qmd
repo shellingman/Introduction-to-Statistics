@@ -1,0 +1,83 @@
+---
+title: "STAT1200 Hypothesis Testing I Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+H~0~: H~1~:
+
+## Example 2 from slides
+
+## Example 3 from slides
+
+p-value = 0.560 p-value = 0.065 p-value = 0.042 p-value = 0.002
+
+## Example 4 from slides
+
+```{r}
+
+t1 <- (1.93-2)/(1.3/sqrt(43))
+t_Crit_Value1 <- qt(p=0.05,df=(43-1),lower.tail = TRUE)
+
+# t1 < Crit_Value1 #Do not reject the null
+
+
+
+
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+library(MASS)
+data("Cars93")
+
+#Price less than 25:
+t.test(Cars93$Price,mu=25,alternative = "less",conf.level = 0.95)
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+
+# pi < 0.65
+
+z1 <- (0.63 - 0.65)/sqrt(0.65*(1-0.65)/43)
+Z_Crit_Value1 <- qnorm(p=0.05,lower.tail = TRUE)
+
+z1 < Z_Crit_Value1 #Do not reject the null
+
+
+
+
+```
+
+## Example 7 from slides
+
+```{r}
+
+
+prop.test(x = sum(as.numeric(Cars93$Type == "Small")), n = nrow(Cars93), p=0.5, alternative = "less", conf.level = 0.95, correct = FALSE)
+
+
+```
+
+## Example 8 from slides
+
+```{r}
+
+library(EnvStats)
+data(swiss)
+
+
+varTest(swiss$Infant.Mortality, alternative = "less", sigma.squared = 15, conf.level = 0.95)
+
+```

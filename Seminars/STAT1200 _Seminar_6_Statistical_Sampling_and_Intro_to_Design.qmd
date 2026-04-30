@@ -1,0 +1,111 @@
+---
+title: "STAT1200 Seminar 6: Statistical Sampling and Intro to Design"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Statistical Sampling** and **Introduction to Design**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+## Task 1
+
+Use the following code to import the *diamonds* dataset into R from the *ggplot2* package.
+
+#### A
+
+```{r, warning=FALSE}
+library(knitr)
+library(ggplot2)
+data(diamonds)
+
+head(diamonds)
+kable(head(diamonds))
+```
+
+Use the following code to familiarize yourself with the *diamonds* dataset.
+
+```{r,message=FALSE}
+
+?diamonds
+```
+
+#### B
+
+1.  Set your seed to 1200 and generate a random sample of $n=200$ random diamonds from the dataset and use the `head()` function to render the first six rows of your sample.
+
+```{r,warning=FALSE,message=FALSE}
+
+library(dplyr)
+library(knitr)
+set.seed(1200)
+
+# kable(head(random_diamonds.2))
+```
+
+2.  Construct a barchart for the `cut` of the diamonds in your sample.
+
+```{r}
+
+
+```
+
+#### B
+
+1.  Set your seed to 1200 and generate a clustered sample from the original *diamonds* dataset using the `cut` as the clustering variable use the `head()` function to render the first six rows of your sample. **Select three clusters.**
+
+```{r}
+
+
+
+```
+
+2.  Using your clustered sample, compare the sample mean and sample variance with the population mean and variance of the `price` variable (original dataset). Comment on what you see.
+
+```{r}
+
+
+
+```
+
+#### C
+
+1.  Set your seed to 1200 and generate a stratified sample from the original *diamonds* dataset using the `cut` as the stratifying variable use the `head()` function to render the first six rows of your sample. **Select 10% of stratum.**
+
+```{r}
+
+
+
+```
+
+2.  Generate a histogram of the `price` variable from your stratified sample and compare it with a histogram of the `price` variable in the original dataset. What do you notice?
+
+```{r}
+
+
+
+```
+
+\newpage
+
+## Task 2
+
+```{=latex}
+
+\begin{itemize}
+    \item An experiment was carried out on apple production from 45 apple trees to determine the effects of watering duration and water PH levels on the mass of apples produced in kilograms.
+    \item[] 
+    \item Three different watering durations (1 hour, 2 hours, 3 hours) were used.
+    \item[] 
+    \item Three different water PH levels were used (7, 8, 9).
+    \item[] 
+    \item \textbf{Identify the experimental units (subjects), factors (treatments), levels, response variable, and how to design the experiment.}
+\end{itemize}
+```

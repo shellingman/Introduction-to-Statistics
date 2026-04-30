@@ -1,0 +1,166 @@
+---
+title: "STAT1200 Linear Regression II Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+### Data Description:
+
+A data.frame with 935 observations on 17 variables:
+
+-   wage: monthly earnings
+-   hours: average weekly hours
+-   IQ: IQ score
+-   KWW: knowledge of world work score
+-   educ: years of education
+-   exper: years of work experience
+-   tenure: years with current employer
+-   age: age in years
+-   married: =1 if married
+-   black: =1 if black
+-   south: =1 if live in south
+-   urban: =1 if live in SMSA (standard metropolitan statistical area)
+-   sibs: number of siblings
+-   brthord: birth order
+-   meduc: mother's education (years)
+-   feduc: father's education (years)
+-   lwage: natural log of wage
+
+```{r}
+
+library(MASS)
+library(dplyr)
+data(Cars93)
+colnames(Cars93)
+
+# Visualize
+
+Cars93 %>% 
+  dplyr::select(Price, MPG.highway,
+                EngineSize, Horsepower,
+                Weight) %>% 
+                pairs()
+
+# Individual Models
+
+lmA <- lm(Price ~ MPG.highway, data = Cars93)
+summary(lmA)
+
+
+lmB <- lm(Price ~ EngineSize, data = Cars93)
+summary(lmB)
+
+
+lmC <- lm(Price ~ Horsepower, data = Cars93)
+summary(lmC)
+
+
+lmD <- lm(Price ~ Weight, data = Cars93)
+summary(lmD)
+
+# Multiple Linear Regression
+
+lmABCD <- lm(Price ~ MPG.highway + EngineSize +
+             Horsepower + Weight, data = Cars93)
+summary(lmABCD) 
+
+```
+
+# Example 1 from slides
+
+```{r}
+
+
+wage2 <- read.csv("wage2.csv")
+
+
+```
+
+# Example 2 from slides
+
+```{r}
+
+summary(lmABCD)
+# Almost 62% of the variability
+
+
+```
+
+# Example 3 from slides
+
+```{r}
+
+summary(lmABCD)
+# ANOVA: at least one is significantly different than zero
+# Only Horsepower is non-zero
+
+
+```
+
+# Example 4 from slides
+
+```{r}
+
+library(car)
+vif(lmABCD) # problem with weight
+barplot(vif(lmABCD), main = "VIF Values", horiz = TRUE,
+col = "steelblue",bty = "l",
+las = 1,cex.names = .55)
+abline(v = 5, lwd = 3, lty = 2)
+
+
+
+```
+
+# Example 5 from slides
+
+```{r}
+
+
+
+# Linearity 
+
+plot(lmABCD$residuals)
+abline(h=0,col="blue")
+
+plot(lmABCD,1)
+
+
+# Normality 
+
+plot(lmABCD,2) # Q-Q plot
+lmABCD.standard <- rstandard(lmABCD) #standardized residuals
+
+# Reject the null hypothesis of normality
+shapiro.test(lmABCD.standard)
+
+
+
+# Constant Variance (Homoscedasticity)
+
+plot(lmABCD,3) #Not okay
+
+ncvTest(lmABCD) #pass the test (Reject the null)
+
+
+
+# Independence
+
+lmABCD.standard <- rstandard(lmABCD) #standardized residuals
+
+plot(lmABCD.standard)
+abline(h=0,col="blue") # Almost Looks okay
+
+
+durbinWatsonTest(lmABCD) # Reject null hypothesis of independence 
+
+vif(lmABCD) # Variance Inflation Factors
+# REMOVE Weight
+
+lmABC <- lm(Price ~ MPG.highway + EngineSize +
+             Horsepower, data = Cars93)
+summary(lmABC) 
+
+### IN PRACTICE WE WILL NEED TO RE-ASSES THE MODELS ###
+```

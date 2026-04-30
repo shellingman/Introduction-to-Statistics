@@ -1,0 +1,36 @@
+---
+title: "Seminar 2"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 2
+
+This is where formatted text goes
+
+```{r}
+
+V = c(1,3,4,5,2,6,7)
+
+V
+
+4+7
+
+# This is a comment
+
+```
+
+## Example 3
+
+```{r}
+
+
+V2 = c(1,2,3,4,5,6,7,8,9,10)
+V2[4] # fourth element
+
+V3 = c(3,5,-1,5,7,8,12,-2)
+
+V3.sorted = sort(V3) # smallest to largest
+V3.sorted
+```

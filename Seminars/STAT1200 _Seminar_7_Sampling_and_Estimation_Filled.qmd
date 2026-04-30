@@ -1,0 +1,317 @@
+---
+title: "STAT1200 Seminar 7: Sampling and Estimation"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Sampling and Estimation**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+## Task 1
+
+Use the following code to import the *diamonds* dataset into R from the *ggplot2* package.
+
+You can take a bit of time to re-familiarize yourself with the data.
+
+#### A
+
+```{r, warning=FALSE}
+
+library(ggplot2)
+data(diamonds)
+```
+
+```{r}
+
+# ?diamonds
+```
+
+#### B
+
+Packages:
+
+```{r,message=FALSE}
+if(!require(BSDA)) install.packages("BSDA")
+library(BSDA)
+if(!require(DescTools)) install.packages("DescTools")
+library(DescTools)
+```
+
+1.  **Assume a known world-wide (population) standard deviation of 4000** ($\sigma=4000$) estimate a 95% confidence interval for the mean of the `price` of the diamonds.
+
+```{r}
+
+pricebar = mean(diamonds$price) # sample mean
+
+# 95% C.I.
+# Assume pop. sd is 4000 
+Lower.95 <- pricebar - qnorm(p=(0.05/2),lower.tail = FALSE)*
+  (4000/sqrt(nrow(diamonds)))
+Upper.95 <- pricebar + qnorm(p=(0.05/2),lower.tail = FALSE)*
+  (4000/sqrt(nrow(diamonds)))
+
+# OR #
+
+#Using the BSDA package:
+#?z.test()
+Price.CI <- z.test(diamonds$price,sigma.x = 4000,conf.level = 0.95)
+Price.CI$conf.int
+
+```
+
+2.  Estimate a 95% confidence interval for the proportion of diamonds with the `cut` of **Ideal**.
+
+```{r}
+
+#Calculate the sample proportion
+Ideal.prop <- sum(as.numeric(diamonds$cut == "Ideal"))/nrow(diamonds)
+
+# 90% C.I.
+
+Ideal.prop.lower.90 <- Ideal.prop - qnorm(p=0.05/2,lower.tail=FALSE)*
+  sqrt((Ideal.prop*(1-Ideal.prop))/nrow(diamonds))
+
+Ideal.prop.upper.90 <- Ideal.prop + qnorm(p=0.05/2,lower.tail=FALSE)*
+  sqrt((Ideal.prop*(1-Ideal.prop))/nrow(diamonds))
+
+
+#Or using prop.test()
+# ?prop.test()
+
+ideal.prop.test = prop.test(sum(as.numeric(diamonds$cut == "Ideal")),
+                            nrow(diamonds), conf.level=0.95) 
+ideal.prop.test$conf.int
+
+# or # (same results)
+
+xideal = sum(as.numeric(diamonds$cut == "Ideal")) # number of "Ideal" diamonds
+ntotal = nrow(diamonds) # Number of total observations
+
+# Estimate the C.I.
+ideal.prop.test2 = prop.test(x=xideal,n=ntotal,conf.level = 0.95) 
+ideal.prop.test2$conf.int # Print the interval
+
+
+```
+
+3.  Assuming that we **do not know** the world-wide standard deviation, estimate a 99% confidence interval for the mean of the `carat` of the diamonds.
+
+```{r}
+
+carat.mean <- mean(diamonds$carat)
+
+n <- nrow(diamonds)
+s <- sd(diamonds$carat)
+alpha <- 0.01
+
+Carat.Lower.95 <- carat.mean - qt(p=alpha/2, df = n-1, lower.tail = FALSE)*
+  (s/sqrt(n))
+Carat.Upper.95 <- carat.mean + qt(p=alpha/2, df = n-1, lower.tail = FALSE)*
+  (s/sqrt(n))
+
+# OR #
+
+Carat.CI <- t.test(diamonds$carat,conf.level = 0.99)
+Carat.CI$conf.int
+
+```
+
+4.  Estimate a 90% confidence interval for the variance of the `carat` of the diamonds.
+
+```{r}
+
+var(diamonds$carat)
+
+VarCI(diamonds$carat,method = "classic",conf.level = 0.90)
+
+```
+
+5.  Assuming that we **do not know** the world-wide standard deviations, estimate a 90% confidence interval for the differences in the means of the `price` of the diamonds between diamonds with a `cut` of **Ideal** and **Good**. **Comment on your findings.**
+
+```{r}
+
+library(DescTools)
+
+
+MeanDiffCI(diamonds$price[diamonds$cut == "Ideal"],
+           diamonds$price[diamonds$cut == "Good"],
+           conf.level = 0.90,
+  paired = FALSE)
+
+
+# OR #
+
+# Vectors of each
+Ideal = subset(diamonds,diamonds$cut == "Ideal") 
+Good = subset(diamonds,diamonds$cut == "Good")
+
+MeanDiffCI(Ideal$price,Good$price,conf.level = .90)
+
+```
+
+6.  Choose **one** of the first four confidence intervals and briefly comment on what the results imply.
+    1.  Price: 95% C.I. suggests that with 95% confidence the average price of a diamond is between \$3899.04 and \$3966.56. *This is quite narrow due to the large sample size and the assumption of a known population standard deviation.*
+    2.  Ideal Cut proportion: 0.395 to 0.404 suggests that with 95% confidence, the proportion of Ideal cut diamonds is in this range. *Again, narrow due to a large sample size.*
+    3.  Carat mean: With 99% confidence the average carets of a diamond is between 0.793 to 0.803. *Did not assume a known population standard deviation.* 
+    4.  Carat variance: The variance of the carat of diamonds is between 0.222 and 0.227 with 90% confidence. 
+    5.  Difference between average prices Ideal & Good Cuts: **This confidence interval for the difference suggests that with 90% confidence the average price for good diamonds is higher than the average price of ideal cut diamonds.** *Does not account for other attributes.*
+
+\newpage
+
+## Task 2
+
+#### A
+
+Import the *Wages.csv* file into your R environment and take some time to understand the variables (see Data Description below).
+
+```{r}
+
+Wages = read.csv("Wages.csv")
+
+
+```
+
+#### B
+
+1.  Estimate a confidence interval for the the differences in proportions of respondents with the `Job` of **Teacher** and **Biologist**. Select $\alpha=0.10$. **Comment on your findings.**
+
+```{r}
+
+
+x.teacher = sum(as.numeric(Wages$Job == "Teacher"))
+x.Biologist = sum(as.numeric(Wages$Job == "Biologist"))
+
+n = nrow(Wages)
+
+
+Job.Prop.diff<- prop.test(x=c(x.teacher,x.Biologist),n=c(n,n),
+                          conf.level = 0.90,correct=FALSE)
+
+
+Job.Prop.diff$conf.int
+
+```
+
+**Comments:** With 90% confidence, there does not appear to be a difference in the proportion of people with jobs as a Teacher or Biologist. **The value 0 is in the 90% confidence interval.**
+
+2.  Assuming that we do **do not know** the nation-wide standard deviations, estimate a confidence interval for the differences in the means between the `Salary` and `Salary.5` salaries scores. Select $\alpha=0.05$. **Comment on your findings.**
+
+```{r}
+
+
+MeanDiffCI(Wages$Salary,Wages$Salary.5,conf.level = 0.95, paired = TRUE,
+           method = "classic")
+
+```
+
+**Comments:** With 95% confidence, the difference is larger than 0 implying that the current salaries are higher than past salaries. **The value 0 is not in the 95% confidence interval.**
+
+3.  Assuming that we do **do not know** the nation-wide standard deviations, estimate a confidence interval for the differences in the means of the `Salary` between the respondents who live in **rural** and **Metro** `Location`. Select $\alpha=0.01$. **Comment on your findings.**
+
+```{r}
+
+
+MeanDiffCI(Wages$Salary[Wages$Location == "Rural"],
+           Wages$Salary[Wages$Location == "Metro"],conf.level = 0.99, 
+           paired = FALSE, method = "classic")
+
+```
+
+**Comments:** With 99% confidence, it does not appear that there is a difference in the salaries of people living in Rural and Metro areas. **The value 0 is in the 99% confidence interval for the difference.**
+
+4.  Estimate a confidence interval for the variance of the `Age` of the respondents. Select $\alpha=0.05$. **Comment on your findings.**
+
+```{r}
+
+VarCI(Wages$Age,method = "classic", conf.level = 0.95) # Use this one!!
+
+```
+
+**Comments:** The results indicate that there is moderate variability, but the confidence interval is fairly wide.
+
+5.  Take some time to use confidence intervals to examine different aspects of this sample. Please indicate the significance level you chose.
+
+**I will leave this to you**
+
+## Task 3
+
+1.  How many observations $n$, drawn from a random sample will we need to obtain a half confidence interval of 0.66 from a sample with $\sigma = 2.35$?
+
+```{r,warning=FALSE,message=FALSE}
+
+library(EnvStats)
+
+E <- 0.66
+sigma <- 2.35
+alpha <- 0.05 #=> C.I. is 95%
+
+n_req <- ((qnorm(p=alpha/2,lower.tail=FALSE)*sigma)/E)^2
+
+n_req
+
+ciNormN(E,sigma,conf.level = 0.95)
+
+```
+
+2.  How many observations $n$, drawn from a random sample will we need to obtain a half confidence interval of 0.5 from a sample with $\sigma = 4.5$?
+
+```{r}
+
+E <- 0.5
+sigma <- 4.5
+alpha <- 0.05 #=> C.I. is 95%
+
+n_req <- ((qnorm(p=alpha/2,lower.tail=FALSE)*sigma)/E)^2
+
+n_req
+
+ciNormN(E,sigma,conf.level = 0.95)
+
+```
+
+\newpage
+
+### Data Descriptions
+
+\small
+
+\subsection\*{Wages}
+
+This dataset (\textit{Wages.csv}) contains the annual wages and additional information of a sample of 314 respondents from three different Canadian Provinces.
+
+\subsection\*{Variables}
+
+\begin{itemize}
+\item \textbf{ID:} Unique identifier for each observation.
+
+\item \textbf{Salary:} Respondent's annual salary (thousands of dollars).
+
+\item \textbf{Salary.5:} Respondent's annual salary 5 years prior to the survey.
+
+\item \textbf{Job:} Employment field of the respondent.
+
+\item \textbf{Location:} If the respondent works in a major centre (metro) or a rural area (rural).
+
+\item \textbf{Province:} Province of employment.
+
+\item \textbf{FatherEducation:} The years of education completed by the respondent's father.
+
+\item \textbf{MotherEducation:} The years of education completed by the respondent's mother.
+
+\item \textbf{GPA:} Grade Point Average of the respondent's last completed education.
+
+\item \textbf{Age:} Respondent's age.
+
+\item \textbf{Experience:} Years of work experience.
+
+\item \textbf{Education:} The years of education completed by the respondent.
+
+\end{itemize}

@@ -1,0 +1,36 @@
+---
+title: "STAT1200 Probability Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+Identify the sample spaces for the following experiments:
+
+-   Flipping two fair coins
+-   Rolling a six sided die.
+-   Rolling one fair coin and one six sided die.
+
+## Example 2 from slides
+
+Use the classical definition to determine the probabilities of the following events:
+
+-   Flipping two fair coins and both resulting in heads.
+-   Landing on a 5 when rolling a six sided die.
+-   Rolling one fair coin and one six sided die and landing on a heads and five
+
+## Example 3 from slides
+
+## Example 4 from slides
+
+## Example 5 from slides
+
+P(A and B)/P(B)
+
+## Example 6 from slides
+
+Hint: P(A ∩ B) = P(B\|A)P(A)
+
+## Example 7 from slides

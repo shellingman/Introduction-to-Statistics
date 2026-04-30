@@ -1,0 +1,287 @@
+---
+title: "STAT1200 Seminar 3: Displaying & Summarizing data"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Displaying & Summarizing data I** and **Displaying & Summarizing data II**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+## Task 1
+
+Create a new R markdown or Quarto file to answer the following questions. Be sure to include you name and student number. Set the default *knit* to PDF or Word.
+
+Use this file to complete the rest of the tasks in this seminar.
+
+#### Problem Context:
+
+We have a sample of respondents on a survey regarding salaries and other characteristics. We are interested in characterizing the sample ahead of any further analysis.
+
+\newpage
+
+## Task 2
+
+1.  Import the *Wages.csv* file into your R environment and take some time to understand the variables (see Data Description below).
+
+```{r}
+
+    Wages = read.csv("Wages.csv")
+
+
+```
+
+2.  Focus your attention on the `Salary` variable and create the following tables and visualizations **and comment on your findings**:
+
+#### 1. Stem-and-Leaf Display:
+
+```{r}
+
+stem(Wages$Salary)
+
+```
+
+\newpage
+
+**Comments:**
+
+-   There appears to be a spike in \$60 000 - \$69 000 salary range.
+
+-   Most of the observations are between \$31 000 and \$159 000.
+
+-   The distribution appears to be slightly positively skewed with a few observations over \$170 000.
+
+-   There are some gaps in the upper tail (higher salaries).
+
+-   Range: \$18 000 - \$206 000
+
+#### 2. Histogram:
+
+```{r}
+
+hist(Wages$Salary,main="Histogram of Salaries",xlab = "Salary")
+
+
+```
+
+**Comments:**
+
+-   The distribution is **unimodal** with a spike between \$50 000 and \$100 000.
+
+-   Slightly **positively skewed** with a longer right tail (a few very high salaries).
+
+-   Range displayed: \$0 - \$210 000
+
+#### 3. Boxplot:
+
+```{r}
+
+boxplot(Wages$Salary,main = "Boxplot of Salary", ylab="Salary")
+
+```
+
+**Comments:**
+
+-   Identified three possible **outliers** (very high salaries).
+
+-   Slight positive skew, but it is less pronounced in this visualization.
+
+-   In the context of salaries, there appears to be a lot of variability around the medial value.
+
+Hint: *What do each of these methods of displaying a sample show us?\
+**Be sure to include appropriate labels.***
+
+3.  Continuing to focus your attention on the `Salary` variable, examine the following numeric characterizations of your sample **and comment on your findings**:
+
+    1.  Sample: mean, median, quartiles, and 10\\% trimmed mean.
+        -   Do you notice anything interesting?
+    2.  Sample: range, variance, and standard deviation.
+
+\newpage
+
+#### 1.
+
+```{r}
+
+# mean
+mean(Wages$Salary)
+
+# median
+median(Wages$Salary)
+
+# Quartiles (also gives you the range)
+quantile(Wages$Salary)
+
+# 10% trimmed mean
+mean(Wages$Salary,trim = .10)
+
+
+```
+
+**Comments:**
+
+-   The *average* salary in this sample is \$88 535.38
+
+-   The median salary in this sample is \$85 240
+
+-   Mean and median: The mean is slightly higher than median indicating a slight positive skew in the sample.
+
+-   Quantiles: 50% of the people in the sample make between \$65 295 and \$107 155.
+
+-   25% make above \$107 155 and 25% make below \$65 295.
+
+-   The **trimmed mean** is smaller than the mean indicating that there were a few *extreme* values in the high end of the sample (closer to symmetric by removing the highest and lowest observations).
+
+\newpage
+
+#### 2.
+
+```{r}
+
+# Range (not the only way to do this)
+range(Wages$Salary)
+
+# Variance
+var(Wages$Salary)
+
+# Standard Deviation
+sd(Wages$Salary)
+
+
+```
+
+**Comments:**
+
+-   The range of salaries in this sample appears to be quite large \[\$17 680, \$205 540\].
+
+-   The variance and standard deviations support the conclusion of high variability within our sample of salaries.
+
+\newpage
+
+## Task 3
+
+1.  Continuing with the *Wages.csv* sample but focusing our attention on the `Job` variable, use the following tools to characterize your sample **and comment on your findings**:
+
+    1.  Bar graph (include appropriate labels).
+
+    2.  Sample proportions for each job.
+
+#### Bar graph/Barplot
+
+```{r}
+
+# Remeber we need the table() function to get frequencies
+
+barplot(table(Wages$Job),main = "Barplot of Jobs",
+        ylab = "Frequency")
+
+
+
+```
+
+**Comments:**
+
+-   There does not appear to be too much disparity in the frequencies across the three groups.
+
+-   Data Scientist is the most represented job in this sample (over 100), followed by Biologist and Teacher.
+
+#### Sample Proportions
+
+```{r}
+
+counts <- table(Wages$Job)
+proportions <- prop.table(counts)
+proportions
+
+```
+
+**Comments:**
+
+-   The conclusions from the bar plot are supported by the sample proportions.
+
+-   No category has over 37% representation in the sample.
+
+-   Data Scientist has the highest representation (36.94%), followed by Biologist (34.39%) and Teacher (28.66%).
+
+\newpage
+
+2.  Finally, create a comparative box plot for the `salary` variable, split by the `job` variable, include appropriate labels **and comment on your findings.**
+
+#### Comparative Box plot
+
+```{r}
+
+boxplot(Wages$Salary~Wages$Job,
+        main = "Comparative Boxplot of Salaries across Jobs",
+        ylab = "Salary",xlab = "Job")
+
+
+```
+
+**Comments:**
+
+-   Biologist has the **largest** variability in this sample.
+
+-   Teacher has the **lowest** variability in this sample.
+
+-   There are two potential outliers identified in the sample.
+
+    -   One in Biologist and one in Data Scientist
+
+-   Biologist appears to be slightly positively skewed.
+
+-   Teacher appears to be slightly negatively skewed.
+
+-   Data Scientist appears to be approximately symmetric.
+
+-   The sample median value of Data Scientist is higher than the other two jobs.
+
+    -   Teacher has the lowest median value.
+
+## Task 4
+
+Render your solutions as a pdf file.
+
+\newpage
+
+\section*{Data Descriptions}
+
+\small
+
+\subsection*{Wages}
+
+This dataset (\textit{Wages.csv}) contains the annual wages and additional information of a sample of 314 respondents from three different Canadian Provinces.
+
+\subsection*{Variables}
+
+\begin{itemize}
+\item \textbf{ID:} Unique identifier for each observation.
+
+\item \textbf{Salary:} Respondent's annual salary (thousands of dollars).
+
+\item \textbf{Salary.5:} Respondent's annual salary 5 years prior to the survey.
+
+\item \textbf{Job:} Employment field of the respondent.
+
+\item \textbf{Location:} If the respondent works in a major centre (metro) or a rural area (rural).
+
+\item \textbf{Province:} Province of employment.
+
+\item \textbf{FatherEducation:} The years of education completed by the respondent's father.
+
+\item \textbf{MatherEducation:} The years of education completed by the respondent's mother.
+
+\item \textbf{GPA:} Grade Point Average of the respondent's last completed education.
+
+\item \textbf{Age:} Respondent's age.
+
+\item \textbf{Experience:} Years of work experience.
+
+\item \textbf{Education:} The years of education completed by the respondent.
+
+\end{itemize}

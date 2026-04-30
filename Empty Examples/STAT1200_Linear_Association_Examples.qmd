@@ -1,0 +1,226 @@
+---
+title: "STAT1200 Linear Association"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Preliminary Example 1
+
+```{r}
+
+data("iris")
+
+# 1 #
+plot(iris$Petal.Length ~ iris$Petal.Width,
+     ylab = "Petal Length",xlab = "Petal Width",
+     main = "Length by Width of Iris Flowers")
+
+# 2 #
+# Sepal.Length ~ Sepal.Width
+
+
+# 3 #
+# Petal.Length ~ Sepal.Length
+
+```
+
+## Example 1 from slides
+
+```{r}
+
+set.seed(1000)
+library(MASS)
+library(ggplot2)
+data("Cars93")
+colnames(Cars93)
+# + geom_smooth(method='lm') #Add regression line to plot
+  
+
+## 1 ## 
+ggplot(data=Cars93,mapping = aes(x = EngineSize, y = Price)) +
+  geom_point()+
+  labs(title = "#1: Scatterplot of Price by Engine Size",
+       x = "Engine Size in Litres",
+       y = "Average Price of the Car")
+
+## 2 ##
+ggplot(data=Cars93,mapping = aes(x = Horsepower, y = Price)) +
+  geom_point()+
+  labs(title = "#2: Scatterplot of Price by Maximum Horsepower",
+       x = "Maximum Horsepower",
+       y = "Average Price of the Car")
+
+
+df1 <- data.frame(X = rnorm(50,1,1),
+                  Y = rnorm(50,-1,3))
+
+
+## 3 ##
+ggplot(data=df1,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#3: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")
+
+
+X = rnorm(50,0,1)
+Y = -X
+
+df2 <- data.frame(X = X,
+                  Y = Y)
+## 4 ##
+ggplot(data=df2,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#4: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")
+
+
+df3 <-  data.frame(X = X,
+                  Y = X^2)
+
+## 5 ##
+ggplot(data=df3,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#5: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")
+
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+
+#cov()
+
+## 1 ##
+
+
+## 2 ##
+
+
+## 3 ##
+
+
+## 4 ##
+
+
+## 5 ##
+
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+#cor()
+
+## 1 ##
+
+
+## 2 ##
+
+
+## 3 ##
+
+
+## 4 ##
+
+
+## 5 ##
+
+
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+# Outliers <- read.csv("Outliers.csv")
+# 
+#  ggplot(data=df3,mapping = aes(x = X, y = Y)) +
+#    geom_point()+
+#    labs(title = "#5: Scatterplot of Y by X",
+#         x = "X",
+#         y = "Y")+
+#   geom_text(x=0, y=3, label=paste("Correlation: ",round(cor(df3$X,df3$Y),digits=3)))
+# 
+# boxplot(Outliers)
+# plot(Outliers)
+
+
+# ggplot(data=Outliers,mapping = aes(x = X1, y = Y1)) +
+#   geom_point()+
+#   labs(title = "#5: Scatterplot of Y1 by X1",
+#        x = "X1",
+#        y = "Y1")+
+#  geom_text(x=3, y=20, label=paste("Correlation: ",round(cor(Outliers$X1,Outliers$Y1),digits=3))) + geom_smooth(method='lm') #Add regression line to plot
+# 
+# 
+
+
+
+```
+
+### Required Functions
+
+```{r REQUIRED-FUNCTIONS}
+
+panel.hist <- function(x, ...)
+{
+    usr <- par("usr")
+    par(usr = c(usr[1:2], 0, 1.5) )
+    h <- hist(x, plot = FALSE)
+    breaks <- h$breaks; nB <- length(breaks)
+    y <- h$counts; y <- y/max(y)
+    rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
+
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+    usr <- par("usr")
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
+    if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+
+
+
+```
+
+## Example 5
+
+```{r}
+
+
+Football24 <- read.csv("Football24.csv")
+colnames(Football24)
+
+#2
+pairs(Football24[,c(7:10)])
+
+#3 With LOWESS curve, correlations, and histograms
+pairs(Football24[,c(7:10)],
+      lower.panel = panel.cor,
+                 diag.panel = panel.hist,
+                 upper.panel = panel.smooth)
+
+
+
+
+```

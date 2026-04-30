@@ -1,0 +1,30 @@
+---
+title: "STAT1200 Introduction to Design Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+Experimental units (subjects):
+
+Factors (treatments):
+
+Levels:
+
+Response variable:
+
+Design:
+
+## Example 2 from slides
+
+Experimental units (subjects):
+
+Factors (treatments):
+
+Levels:
+
+Response variable:
+
+Design:

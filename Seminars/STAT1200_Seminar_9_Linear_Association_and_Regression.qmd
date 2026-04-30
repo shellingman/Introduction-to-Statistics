@@ -1,0 +1,163 @@
+---
+title: "STAT1200 Seminar 9: Linear Association and Regression"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Linear Association** and **Regression I/II/III**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+Import the *Health.csv* dataset to complete the following tasks (data description below):
+
+```{r}
+
+Health = read.csv("Health.csv")
+
+```
+
+## Task 1
+
+Construct a correlation matrix of the numeric variables found in the *Health.csv* data (ignoring `ID`). What are the two highest correlation coefficients? What do you think this implies?
+
+*Hint:*
+
+```{r,message=FALSE,warning=FALSE}
+
+library(dplyr)
+library(ggcorrplot)
+
+iris %>% 
+  select_if(is.numeric) %>% 
+  cor() %>% 
+  round(digits = 2) %>% 
+ggcorrplot(hc.order = TRUE,
+           type = "lower",
+           lab = TRUE,
+           lab_size = 2)
+
+```
+
+## Task 2
+
+Construct the following two linear regression models, interpret their results, and conduct diagnostics on **one** of your models:
+
+1.  Dependent variable (Y): `PostTreatment` & Independent variable (X): `Exercise`.
+
+```{r}
+
+
+```
+
+
+2.  Dependent variable (Y): `PostTreatment` & Independent variable (X): `HighestSalary`.
+
+```{r}
+
+
+
+```
+
+#### Diagnostics
+
+```{r}
+
+```
+
+## Task 3
+
+Construct a linear regression model with `Age`, `WorkYears`, `Exercise`, `HighestSalary`, `Drinks`, `Family`, `Sector`, `Surgery`, and `Treatment` as the independent variables and `PostTreatment` as the dependent variable. **Comment on the results of your model.**
+
+```{r}
+
+
+```
+
+## Task 4
+
+Construct a linear regression model that you think is the best fit for this problem. **Comment on your final model.**
+
+```{r}
+
+```
+
+## Task 5
+
+Conduct the appropriate diagnostic checks on your final model. Does it pass all of the necessary assumptions? Be sure to identify the null hypotheses, alternative hypotheses, and comment on the results of your tests.
+
+```{r}
+
+
+```
+
+## Task 6
+
+There is a model that works well for this problem but has an interaction term. Try to identify this model and perform the necessary diagnostic checks.
+
+```{r}
+
+
+
+```
+
+\newpage
+
+### Interaction Example
+
+```{r}
+
+library(ggplot2)
+
+X1 = rnorm(77,1,1)
+X2 = factor(rbinom(77,1,0.5))
+Y = X1 + runif(77,1,2) + X1*as.numeric(X2)
+
+
+
+df3 <- data.frame(Y, X1 , X2 )
+
+ggplot(data = df3, mapping = aes(y = Y, x = X1, color = X2))+
+         geom_point() +
+         geom_smooth(method = "lm")+
+  labs(title = "Effect of Second Independent Variable and Interaction")
+
+lmExtra <- lm(Y~X1*X2,data = df3)
+summary(lmExtra)
+
+```
+
+Positive *modulation* on X1 when moving from category 0 to category 1 in X2.
+
+\newpage
+
+## Data Descriptions
+
+#### Health
+
+```{=latex}
+
+This dataset (\textit{Health.csv}) contains health measures and potentially influential factors from a study of 377 individuals. 
+\subsection*{Variables}
+\begin{itemize}
+    \item \textbf{ID:} Unique identifier for each observation.
+    \item \textbf{Baseline:} Baseline health score (0-100) 0 (worst) and 100 (best).
+    \item \textbf{Treatment:} Which treatment the subject received.
+    \item \textbf{Job:} Employment field of the respondent.
+    \item \textbf{PostTreatment:} Health score (0-100) after receiving the treatment.
+    \item \textbf{Age:} Age at the time of treatment.
+    \item \textbf{WorkYears:} The years of employment completed by the subject.
+    \item \textbf{Exercise:} Average weekly hours of exercise completed by the subject.
+    \item \textbf{HighestSalary:} The highest annual salary the subject has earned (in thousands).
+    \item \textbf{Drinks:} Average number of alcoholic drinks the subject consumes in a week.
+    \item \textbf{Family:} Number of family members living within 20 kilometres of the subject. 
+    \item \textbf{Sector:} The subject's main employment sector.
+    \item \textbf{Surgery:} Has the subject had surgery of any kind before or not.
+\end{itemize}
+```

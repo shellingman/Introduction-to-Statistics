@@ -1,0 +1,189 @@
+---
+title: "STAT1200 Seminar 6: Statistical Sampling and Intro to Design"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Statistical Sampling** and **Introduction to Design**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+## Task 1
+
+Use the following code to import the *diamonds* dataset into R from the *ggplot2* package.
+
+#### A
+
+```{r, warning=FALSE}
+
+library(ggplot2)
+data(diamonds)
+```
+
+Use the following code to familiarize yourself with the *diamonds* dataset.
+
+```{r}
+
+?diamonds
+```
+
+#### B
+
+1.  Set your seed to 1200 and generate a random sample of $n=200$ random diamonds from the dataset and use the `head()` function to render the first six rows of your sample.
+
+```{r,warning=FALSE,message=FALSE}
+
+library(dplyr)
+library(knitr)
+set.seed(1200)
+
+#essentially shuffles the incidences
+random_order <- sample(nrow(diamonds)) 
+
+#Random sample of 200
+random_diamonds <- diamonds[random_order[1:200],] 
+kable(head(random_diamonds))
+
+# OR #
+
+#Using dplyr:
+library(dplyr)
+?sample_n() #help
+
+random_diamonds.2 <- diamonds %>%
+  sample_n(200, replace = FALSE)
+kable(head(random_diamonds.2))
+
+
+```
+
+2.  Construct a barchart for the `cut` of the diamonds in your sample.
+
+```{r}
+barplot(table(random_diamonds$cut),ylab = "Frequency",main = "Barplot of Diamond Cuts",cex.names = 0.60)
+
+
+## OR ##
+
+ggplot(random_diamonds.2, aes(x=cut)) +
+  xlab("Cut")+
+  ylab("Frequency")+
+  ggtitle("Barplot of Diamond Cuts")+
+  geom_bar()
+
+```
+
+#### B
+
+1.  Set your seed to 1200 and generate a clustered sample from the original *diamonds* dataset using the `cut` as the clustering variable use the `head()` function to render the first six rows of your sample. **Select three clusters.**
+
+```{r}
+
+set.seed(1200)
+
+diamonds_clusters = sample(unique(diamonds$cut), size = 3, 
+                            replace = FALSE)
+diamonds_clusters #which clusters are chosen
+
+diamonds_clustered_sample = diamonds[diamonds$cut %in%
+                                         diamonds_clusters, ]
+
+kable(head(diamonds_clustered_sample))
+
+```
+
+2.  Using your clustered sample, compare the sample mean and sample variance with the population mean and variance of the `price` variable (original dataset). Comment on what you see.
+
+```{r}
+
+mean(diamonds_clustered_sample$price)
+mean(diamonds$price)
+
+
+var(diamonds_clustered_sample$price)
+var(diamonds$price)
+
+```
+
+#### C
+
+1.  Set your seed to 1200 and generate a stratified sample from the original *diamonds* dataset using the `cut` as the stratifying variable use the `head()` function to render the first six rows of your sample. **Select 10% of stratum.**
+
+```{r}
+set.seed(1200)
+
+diamonds_strat_sample <- diamonds %>%
+group_by(cut) %>% #The stratum
+sample_frac(size=.10) # 10% of each group
+
+kable(head(diamonds_strat_sample),row.names = FALSE)
+
+
+```
+
+2.  Generate a histogram of the `price` variable from your stratified sample and compare it with a histogram of the `price` variable in the original dataset. What do you notice?
+
+```{r}
+
+hist(diamonds_strat_sample$price, xlab = "Price",
+     main = "Histogram of Price from Sample")
+
+hist(diamonds$price, xlab = "Price", 
+     main = "Histogram of Price from Population")
+
+```
+
+\newpage
+
+## Task 2
+
+```{=latex}
+
+\begin{itemize}
+    \item An experiment was carried out on apple production from 45 apple trees to determine the effects of watering duration and water PH levels on the mass of apples produced in kilograms.
+    \item[] 
+    \item Three different watering durations (1 hour, 2 hours, 3 hours) were used.
+    \item[] 
+    \item Three different water PH levels were used (7, 8, 9).
+    \item[] 
+    \item \textbf{Identify the experimental units (subjects), factors (treatments), levels, response variable, and how to design the experiment.}
+\end{itemize}
+```
+
+```{=latex}
+
+\begin{itemize}
+    \item Experimental units (subjects):
+    \begin{itemize}
+      \item 45 apple trees.
+\end{itemize}
+    \item Factors (treatments):
+    \begin{itemize}
+      \item Watering durations.
+      \item Water PH levels.
+\end{itemize}
+    \item Levels:
+    \begin{itemize}
+      \item Watering durations: 1 hour, 2 hours, \& 3 hours.
+      \item Water PH levels: 7, 8, 9.
+\end{itemize}
+    \item Response variable:
+    \begin{itemize}
+      \item Mass of apples in Kg.
+\end{itemize}
+    \item Design:
+    \begin{itemize}
+      \item 9 total (3x3) combinations of factors.
+      \item Split the apple trees into groups of 5.
+      \item Apply each possible combination of levels to the trees.
+      \item Record the mass of the apples for each group.
+\end{itemize}
+\end{itemize}
+```

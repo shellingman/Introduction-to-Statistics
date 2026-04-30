@@ -1,0 +1,232 @@
+---
+title: "STAT1200 Seminar 8: Hypothesis Testing"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Hypothesis Testing I/II/III**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+## Task 1
+
+Use the following code to import the *diamonds* dataset into R from the *ggplot2* package.
+
+You can take a bit of time to re-familiarize yourself with the data.
+
+#### A
+
+```{r, warning=FALSE,message=FALSE}
+
+library(ggplot2)
+library(dplyr)
+data(diamonds)
+
+
+
+# ?diamonds
+```
+
+#### B
+
+$H_0: \mu_{price} = 7000$
+
+$H_1: \mu_{price} \neq 7000$
+
+1.  It is widely believed that the **average `price`** of diamonds is \$7000. With 95% confidence, does this assumption hold based on your sample? **Be sure to identify the null and alternative hypotheses and make conclusions from your results** (see above example).
+
+**Conclusions:** Based on the one-sample $t$-test, we can reject this null hypothesis in favour of the alternative that the average price of the diamonds is not $7000.
+
+```{r}
+
+
+t.test(diamonds$price, mu = 7000, conf.level = 0.95)
+
+```
+
+2.  It is widely believed that the **average `depth`** percentage of diamonds is less than or equal to 60. With 95% confidence, does this assumption hold based on your sample? **Be sure to identify the null and alternative hypotheses and make conclusions from your results** (see above example).
+
+$H_0: \mu_{depth} \leq 60$
+
+$H_1: \mu_{depth} > 60$
+
+```{r}
+
+t.test(diamonds$depth,mu=60,alternative = "greater",conf.level = 0.95)
+
+
+```
+
+**Conclusions:** Based on this one-sample $t$-test we can reject the null hypothesis that the **average `depth`** percentage of diamonds is less than or equal to 60 in favour of the alternative that it is greater than 60%.
+
+3.  It is assumed that the variance in the `price` of Ideal `cut` diamonds is greater than or equal to the `price` of Premium `cut` diamonds. With 90% confidence, does this assumption hold based on your sample? **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+$H_0: \sigma^2_{Ideal} / \sigma^2_{Premium} \geq 1$
+
+$H_1:\sigma^2_{Ideal} / \sigma^2_{Premium} < 1$
+
+```{r}
+
+var.test(diamonds$price[diamonds$cut == "Ideal"],
+         diamonds$price[diamonds$cut == "Premium"],
+                        alternative = "less", conf.level = 0.90)
+
+```
+
+**Conclusions:** With 90% confidence, the null hypothesis that the the variance in the `price` of Ideal `cut` diamonds is greater than or equal to the `price` of Premium `cut` diamonds may be rejected in favour of the alternative hypothesis. This is based on a two-sample $F$-test. 
+
+4.  It is widely assumed that the proportion of diamonds with a `color` of D (best) is equal to 0.25. With 99% confidence, does this assumption hold based on your sample? **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+$H_0: \pi_{D} = 0.25$
+
+$H_1: \pi_{D} \neq 0.25$
+
+```{r}
+
+x <- sum(as.numeric(diamonds$color == "D"))
+n <- nrow(diamonds)
+
+
+prop.test(x,n,p=0.25,alternative = "two.sided", conf.level = 0.95)
+
+```
+
+**Conclusions:** The one-sample proportion test indicates that we may reject the null hypothesis in favour of the alternative that the proportion of diamonds with a `color` of D is **not** equal to 0.25.
+
+## Task 2
+
+**Continuing to work with the diamonds dataset.**
+
+1.  Conduct an appropriate test with 95% significance, to determine if the of the `depth` of the diamonds are the same across all of the `cuts`. Be sure to check all of the necessary assumptions. **Identify the null and alternative hypotheses for each step and be sure to comment on your findings.**
+
+Overall hypotheses:
+
+$H_0: \mu_F = \mu_G = \mu_{VG} = \mu_P = \mu_I$
+
+$H_1:$ At least one is different
+
+```{r,message=FALSE}
+library(DescTools)
+
+# 1 #
+
+# H0: Each group is normally distributed
+# H1: Not normally distributed
+
+shapiro.test(diamonds$depth[diamonds$cut == "Fair"]) # Reject H0
+shapiro.test(diamonds$depth[diamonds$cut == "Good"]) # Reject H0
+# shapiro.test(diamonds$depth[diamonds$cut == "Very Good"])
+# shapiro.test(diamonds$depth[diamonds$cut == "Premium"])
+# shapiro.test(diamonds$depth[diamonds$cut == "Ideal"])
+
+
+# 2 #
+
+# H0: Constant variances across groups
+# H1: At least one group has a different variance
+
+bartlett.test(depth~cut,data = diamonds) # reject H0
+LeveneTest(depth~cut,data = diamonds) # reject H0
+
+
+# 3 # Testing group differences
+oneway.test(depth~cut,data = diamonds)
+kruskal.test(depth~cut,data = diamonds)
+
+
+```
+
+**Conclusions:** Some of the groups do not follow a normal distribution as indicated by the Shapiro-Wilk test. An alternative test for equal variances needed to be applied and the Levene test also rejected the null hypothesis, indicating that the variances are different. The oneway ANOVA test is not reliable, and a Kruskal-Wallace test is applied. The results of the Kruskal-Wallace test indicate that the null hypothesis is rejected and at least one of the groups differs from the rest of the groups. 
+
+2.  It is widely believed that the `clarity` of diamonds is independent of their `cut`. Conduct an appropriate hypothesis test to test the validity of this assumption ($\alpha=0.1$). **Identify the null and alternative hypotheses and be sure to comment on your findings.**
+
+$H_0: Independent$
+
+$H_1: Not~Independent$
+
+```{r}
+
+table(diamonds$clarity,diamonds$cut)
+chisq.test(diamonds$clarity,diamonds$cut)
+
+```
+
+**Conclusions:** The $\chi^2$-test indicates that we may reject the null hypothesis of independence in favour of the alternative that the `clarity` and the `cut` of the diamonds are **not** independent.
+
+## Task 3
+
+**Continuing to work with the diamonds dataset.**
+
+**Conduct appropriate hypothesis tests to evaluate the following *alternative hypotheses* based on your sample.**
+
+1.  The mean of the `table` for diamonds with a `color` E is less than the mean of the `table` for diamonds with a `color` G. Select $\alpha=0.05$. **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+$H_0: \mu_E - \mu_G \geq 0$
+
+$H_1: \mu_E - \mu_G < 0$
+
+```{r}
+
+t.test(diamonds$table[diamonds$color == "E"],
+       diamonds$table[diamonds$color == "G"],
+       alternative = "less",
+       conf.level = 0.95)
+
+
+```
+
+**Conclusions:** Based on the two-sample $t$-test the null hypothesis that mean of the `table` for diamonds with a `color` E is greater than or equal to the mean of the `table` for diamonds with a `color` G may **not** be rejected.
+
+2.  The variance of the `carat` of the diamonds is greater than 0.13. Select $\alpha=0.01$. **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+$H_0: \sigma^2 \leq 0.13$
+
+$H_1: \sigma^2 > 0.13$
+
+```{r,message=FALSE}
+library(EnvStats)
+
+varTest(diamonds$carat,alternative = "greater", 
+        sigma.squared = 0.13, conf.level = 0.99)
+
+```
+
+
+**Conclusions:** The null hypothesis may be rejected in favour of the alternative that the variance of the `carat` of the diamonds is greater than 0.13.
+
+3.  The proportion of Premium `cut` diamonds with a `color` of G is greater than the proportion of Ideal `cut` diamonds with a `color` of F. Select $\alpha=0.05$. **Be sure to identify the null and alternative hypotheses and make conclusions from your results.**
+
+$H_0: \pi_{premium_G} - \pi_{Ideal_F} \leq 0$
+
+$H_1: \pi_{premium_G} - \pi_{Ideal_F} > 0$
+
+```{r}
+
+x1 <- sum(as.numeric(diamonds$color == "G" & 
+                       diamonds$cut == "Premium"))
+n1 <- sum(as.numeric(diamonds$cut == "Premium"))
+
+
+x2 <- sum(as.numeric(diamonds$color == "F" & 
+                       diamonds$cut == "Ideal"))
+n2 <- sum(as.numeric(diamonds$cut == "Ideal"))
+
+
+prop.test(x = c(x1,x2),
+          n = c(n1,n2),
+          alternative = "greater",
+          conf.level = 0.95)
+
+
+```
+
+
+**Conclusions:** The results of the two-sample proportions test indicate that we may reject the null hypothesis in favour of the alternative that the proportion of Premium `cut` diamonds with a `color` of G is greater than the proportion of Ideal `cut` diamonds with a `color` of F.
+

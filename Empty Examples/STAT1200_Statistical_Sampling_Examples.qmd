@@ -1,0 +1,138 @@
+---
+title: "STAT1200 Statistical Sampling Examples"
+author: "Sean Hellingman"
+format: html
+editor: visual
+---
+
+```{r data}
+
+set.seed(14)
+
+data("mtcars")
+mtcars$Car <- row.names(mtcars) #add row names as a vector
+
+```
+
+Two ways to generate a *random* sample in R:
+
+```{r sample-examples}
+
+set.seed(1200)
+
+#Base R:
+?sample() #help
+
+random_order <- sample(nrow(mtcars)) #essentially shuffles the incidences
+random_cars <- mtcars[random_order[1:5],] #Random sample of 5 cars
+random_cars
+
+#Using dplyr:
+library(dplyr)
+?sample_n() #help
+
+random_cars.2 <- mtcars %>%
+  sample_n(5, replace = FALSE)
+random_cars.2
+
+```
+
+## Example 1 from slides
+
+```{r random-sample}
+
+library(dplyr)
+data("starwars")
+
+set.seed(1200)
+
+# Base R
+
+RO1 = sample(nrow(starwars))
+Random_Characters = starwars[RO1[1:10],]
+Random_Characters
+
+# OR #
+# dplyr #
+
+Random_Characters2 = starwars %>% 
+  sample_n(10,replace = FALSE)
+Random_Characters2
+
+```
+
+Stratified sample example:
+
+```{r iris}
+
+set.seed(123)
+
+data("iris")
+
+#need the dplyr package
+#obtain stratified sample
+strat_sample <- iris %>%
+                  group_by(Species) %>% #The stratum
+                  sample_frac(size=.15) # 15% of each group
+
+strat_sample
+
+```
+
+## Example 2 from slides
+
+```{r stratified}
+
+library(MASS)
+data("Aids2") 
+?Aids2
+
+set.seed(1200)
+
+strat_sample2 = Aids2 %>% 
+  group_by(state) %>% 
+  sample_frac(size = 0.2)
+
+strat_sample2
+```
+
+Cluster sampling example:
+
+```{r cluster-example}
+
+set.seed(14)
+unique(iris$Species) #Three species
+
+clusters <- sample(unique(iris$Species), size = 2, replace = FALSE) #select 2 out of the three species
+clusters #which clusters are chosen
+
+clusterd_sample <- iris[iris$Species %in% clusters, ] #subset df in list of Species
+
+clusterd_sample # results
+
+```
+
+## Example 3 from slides
+
+Import the Aids2 dataset from the MASS package.
+
+Generate a clustered sample using state as the clustering variable.
+
+Select two random clusters to be part of your sample.
+
+```{r cluster-sampling}
+ 
+library(MASS)
+data("Aids2") 
+unique(Aids2$state)
+
+set.seed(1200)
+
+clusters3 <- sample(unique(Aids2$state), size = 2, replace = FALSE)
+
+clusters3
+
+clusterd_sample3 <- Aids2[Aids2$state %in% clusters3, ]
+
+clusterd_sample3
+```

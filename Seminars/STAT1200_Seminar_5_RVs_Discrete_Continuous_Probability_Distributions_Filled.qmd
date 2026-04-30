@@ -1,0 +1,334 @@
+---
+title: "STAT1200 Seminar 5: Random Variables & Discrete & Continuous Probability Distributions"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+This seminar focuses on topics covered in **Random Variables & Discrete Probability Distributions** and **Continuous Probability Distributions**. You will be given time to work through practical examples related to the materials covered in these lectures.
+
+Please feel free to refer to the example code in the lectures to help you solve the problems.
+
+As always, please do not hesitate to ask any questions!
+
+\newpage
+
+## Task 1
+
+What is the probability distribution (PMF) of the **sum** of one six-sided die and one four-sided die \[1-4\]? This link will explain [four-sided dice](https://en.wikipedia.org/wiki/Four-sided_die)
+
+```{r, warning=FALSE}
+library(knitr)
+
+
+
+PMF <- data.frame(Results = c(2,3,4,5,6,7,8,9,10),
+                  Probability = c(1/24,2/24,3/24,4/24,4/24,4/24,
+                                  3/24,2/24,1/24))
+
+
+kable(PMF, align = "lc")
+```
+
+|      |      |      |      |      |      |      |      |      |      |
+|------|------|------|------|------|------|------|------|------|------|
+| x    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   |
+| p(x) | 1/24 | 2/24 | 3/24 | 4/24 | 4/24 | 4/24 | 3/24 | 2/24 | 1/24 |
+
+Use your probability mass function to determine the following probabilities:
+
+-   P(X = 4) = **3/24**
+
+```{r}
+cat("P(X = 4) = 3/24 ", "or", PMF$Probability[PMF$Results == 4], "\n")
+```
+
+-   P(X = 12) = 0/24 =**0**
+-   P(X is Even) = **12/24**
+-   P(X = 4 or X = 5) = $P(4 \cup 5)$ = 3/24 + 4/24 = **7/24**
+
+#### B
+
+Determine the expected value and variance of the probability distribution (PMF) of the sum of one six-sided die and one four-sided die \[1-4\].
+
+Expected Value:
+
+```{r}
+
+E = (1/24)*2 + (2/24)*3 + (3/24)*4 + (4/24)*5 + (4/24)*6 + 
+  (4/24)*7 + (3/24)*8 + (2/24)*9 + (1/24)*10
+E
+```
+
+Variance:
+
+```{r}
+
+V = (1/24)*(2-E)^2 + (2/24)*(3-E)^2 + (3/24)*(4-E)^2 + (4/24)*(5-E)^2 + 
+  (4/24)*(6-E)^2 + (4/24)*(7-E)^2 + (3/24)*(8-E)^2 + 
+  (2/24)*(9-E)^2 + (1/24)*(10-E)^2
+
+V
+ 
+
+```
+
+**Using vectors:**
+
+```{r}
+
+Expected <- sum(PMF$Results*PMF$Probability)
+cat("E[X] =",Expected, "\n")
+
+Variance <- sum(((PMF$Results - Expected)^2)*PMF$Probability)
+cat("V[X] =",Variance, "\n")
+
+
+```
+
+\newpage
+
+#### C
+
+What is the cumulative distribution function (CDF) of the sum of one six-sided die and one four-sided die \[1-4\]?
+
+|      |      |      |      |       |       |       |       |       |       |
+|------|------|------|------|-------|-------|-------|-------|-------|-------|
+| x    | 2    | 3    | 4    | 5     | 6     | 7     | 8     | 9     | 10    |
+| p(x) | 1/24 | 2/24 | 3/24 | 4/24  | 4/24  | 4/24  | 3/24  | 2/24  | 1/24  |
+| F(X) | 1/24 | 3/24 | 6/24 | 10/24 | 14/24 | 18/24 | 21/24 | 23/24 | 24/24 |
+
+```{r}
+
+#OR
+
+PMF$CDF <- cumsum(PMF$Probability)
+kable(PMF, align = "lcc")
+
+```
+
+```{r}
+Probability = c(1/24,2/24,3/24,4/24,4/24,4/24,
+                                  3/24,2/24,1/24)
+
+cumsum(Probability)
+```
+
+Use the CDF to determine the following probabilities:
+
+-   P(X $\leq$ 6) = **14/24**
+
+```{r}
+# Or
+
+cat("P(X <= 6)=",PMF$CDF[PMF$Results == 6], "\n")
+```
+
+-   P(X \> 3) = 1 - P(X $\leq$ 3) = **21/24**
+-   P(5 $\leq$ X $\leq$ 7) = P(X $\leq$ 7) - P(X $\leq$ 4) = 18/24 - 6/24 = **12/24**
+-   P(X $\leq$ 3 or X \> 7) = P(X $\leq$ 3) + P(X \> 7) = 3/24 + 6/24 = **9/24**
+
+## Task 2
+
+#### A
+
+Suppose we are rolling a single six-sided die. We define a success to be landing on a 5.
+
+-   Define the Bernoulli distribution for this experiment.
+-   Calculate the expected value and variance (from theory).
+
+```{=latex}
+\begin{itemize}
+      \item The PMF of the Bernoulli distribution is:
+      \end{itemize}
+      \begin{align}
+p(x) =\left\{
+\begin{array}{ll}
+      p, & \text{if~} x = \text{5} \\
+      1-p, & ,~\text{Otherwise} \\
+\end{array} 
+\right.
+    \end{align} 
+    where \textbf{$p$ = 1/6 is the probability of landing on a 5. Therefore:}
+    \begin{itemize}
+        \item Expected value: $p$ = \textbf{1/6}
+        \item Variance: $p(1-p)$ = \textbf{5/36 = 0.1388889}
+    \end{itemize}
+```
+
+#### B
+
+Suppose we repeat the experiment from A *n=12* times.
+
+-   What is the name of the resulting distribution?
+
+    -   **Binomial distribution**
+
+-   What is the expected value and variance of this distribution?
+
+    -   $E[X]$ = $n\times p$ = 12\$\times\$1/6 = **2**
+    -   $V[X]$ = 12 $\times$ $p(1-p)$ = 12 $\times$ 5/36 = **5/3 = 1.666667**
+
+-   Calculate the probability that we get 5 successes.
+
+    ```{r}
+
+    cat("P(X = 5) =",dbinom(5, size = 12, prob = 1/6) ,"\n")
+    ```
+
+-   Calculate the probability that we get more than 5 successes.
+
+    ```{r}
+
+    cat("P(X > 5) =",1 - pbinom(5, size = 12, prob = 1/6, 
+                                lower.tail = TRUE) ,"\n")
+
+    ```
+
+#### C
+
+Suppose we have a Poisson distribution for the number of arrivals to our restaurant with $\lambda$= 7 per hour.
+
+-   What is the expected value and variance of this distribution?
+
+    $E[X] = \lambda = 7$\
+    $V[X] = \lambda = 7$
+
+-   What is the probability that we have *exactly* 5 customers in an hour?
+
+```{r}
+
+cat("P(X = 5) =",dpois(5,lambda = 7) ,"\n")
+
+```
+
+-   What is the probability that we have *at most* 8 customers in an hour?
+
+```{r}
+
+cat("P(X <= 8) =",ppois(8,lambda = 7) ,"\n")
+
+
+```
+
+-   What is the probability that we have *more than* 8 customers in an hour?
+
+```{r}
+
+cat("P(X > 8) =",1 - ppois(8,lambda = 7) ,"\n")
+
+# OR
+
+cat("P(X > 8) =",ppois(8,lambda = 7,lower.tail = FALSE) ,"\n")
+
+```
+
+\newpage
+
+## Task 3
+
+#### A
+
+Assume that $X$ follows a Uniform(a = 1, b = 3) distribution and $Y$ follows a Uniform(a = 0.5, b = 10.5). Calculate the following probabilities:
+
+-   P(X \< 3.5)
+
+    ```{r}
+
+    cat("P(X < 3.5) =",punif(3.5,min = 1,max = 3,lower.tail = TRUE) ,"\n")
+
+    ```
+
+-   P(Y \< 3.5)
+
+    ```{r}
+
+    cat("P(Y < 3.5) =",punif(3.5,min = 0.5,max = 10.5,lower.tail = TRUE) 
+        ,"\n")
+
+    ```
+
+-   P(X \> 2.5)
+
+    ```{r}
+
+    cat("P(X > 2.5) =",punif(2.5,min = 1,max = 3,lower.tail = FALSE) 
+        ,"\n")
+
+    ```
+
+-   P(Y \> 2.5)
+
+    ```{r}
+
+    cat("P(Y > 2.5) =",punif(2.5,min = 0.5,max = 10.5,
+                             lower.tail = FALSE) ,"\n")
+
+    ```
+
+-   P(2.3 \< X \< 3)
+
+    ```{r}
+
+    cat("P(2.3 < X < 3) =",punif(2.3,min = 1,max = 3,
+                                 lower.tail = FALSE) ,"\n")
+
+    ```
+
+-   P(2.3 \< Y \< 5.3)
+
+    ```{r}
+
+    cat("P(2.3 < Y < 5.3) =",punif(5.3,min = 0.5,max = 10.5,
+                                   lower.tail = TRUE) -
+    punif(2.3,min = 0.5,max = 10.5,lower.tail = TRUE) ,"\n")
+
+    ```
+
+#### B
+
+Assume that $Z$ follows a standard Normal($\mu$ = 0, $\sigma$ = 1) distribution and $T$ follows a Normal($\mu$ = 3, $\sigma$ = 2). Calculate the following probabilities:
+
+-   P(Z \< 1)
+
+    ```{r}
+
+    cat("P(Z < 1) =", pnorm(1,mean=0,sd=1,lower.tail = TRUE)
+        ,"\n")
+
+    ```
+
+-   P(T \< 1)
+
+    ```{r}
+
+    cat("P(T < 1) =", pnorm(1,mean=3,sd=2,lower.tail = TRUE)
+        ,"\n")
+
+    pnorm(1,mean=3,sd=2)
+
+    ```
+
+-   P(-0.5 \< Z \< 0.5)
+
+    ```{r}
+
+    cat("P(-0.5 < Z < 0.5) =", pnorm(0.5,mean=0,sd=1,
+                                     lower.tail = TRUE) -
+    pnorm(-0.5,mean=0,sd=1,lower.tail = TRUE),"\n")
+
+    ```
+
+-   P(-0.5 \< T \< 0.5)
+
+    ```{r}
+
+    cat("P(-0.5 < T < 0.5) =", pnorm(0.5,mean=3,sd=2,
+                                     lower.tail = TRUE) -
+    pnorm(-0.5,mean=3,sd=2,lower.tail = TRUE),"\n")
+
+    pnorm(0.5,mean=3,sd=2) - pnorm(-0.5,mean=3,sd=2)
+
+    ```

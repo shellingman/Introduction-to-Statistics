@@ -1,0 +1,150 @@
+---
+title: "STAT1200 Hypothesis Testing III Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+```{r}
+
+library(ggplot2)
+
+Sample1 <- rnorm(1000,mean=1,sd=2)
+sample2 <- rchisq(1000,df=15)
+
+# Normally Distributed
+qqnorm(Sample1, pch = 1, frame = FALSE)
+qqline(Sample1, col = "steelblue", lwd = 2)
+
+# Not Normally Distributed
+qqnorm(sample2, pch = 1, frame = FALSE)
+qqline(sample2, col = "coral", lwd = 2)
+
+
+Samples <- data.frame(Sample1 = Sample1, Sample2 = sample2)
+
+ggplot(Samples, aes(sample = Sample1)) +
+  stat_qq() +
+  stat_qq_line()
+
+
+ggplot(Samples, aes(sample = Sample2)) +
+  stat_qq() +
+  stat_qq_line()
+
+
+```
+
+## Example 1 from slides
+
+```{r}
+
+library(MASS)
+data("Cars93")
+
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+ks.test(sample.data, "pnorm",mean=0,sd=1)
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+shapiro.test(Sample1)
+shapiro.test(sample2)
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+data("iris")
+
+
+shapiro.test(iris$Sepal.Length[iris$Species == "setosa"])
+
+bartlett.test(Sepal.Length ~ Species, data = iris)
+
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+library(daewr)
+data("bread")
+?bread
+
+# 1 #
+
+boxplot(bread$height~bread$time,xlab = "Rise Time", ylab = "Height")
+
+# # 2 #
+# shapiro.test(bread$height[bread$time == "35"])
+# shapiro.test(bread$height[bread$time == "40"])
+# shapiro.test(bread$height[bread$time == "45"])
+# 
+# # 3 #
+# bartlett.test(height ~ time, data = bread)
+# 
+# 
+# # 4 #
+# oneway.test(height ~ time, data = bread, var.equal = TRUE)
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+# Not independent:
+chisq.test(Cars93$MPG.city,factor(Cars93$Cylinders))
+
+
+```
+
+## Example 7 from slides
+
+```{r}
+
+
+Voting <- matrix(c(50, 30, 20,    # High school
+                      40, 35, 25,    # College
+                      30, 40, 30),   # Graduate
+                    nrow = 3, byrow = TRUE)
+
+colnames(Voting) <- c("PartyA", "PartyB", "PartyC")
+rownames(Voting) <- c("HighSchool", "College", "Graduate")
+
+```
+
+## Example 8 from slides
+
+```{r}
+
+satisfaction <- matrix(c(45, 35, 20,   # North
+                              30, 50, 20,   # South
+                              25, 40, 35,   # East
+                              20, 30, 50),  # West
+                            nrow = 4, byrow = TRUE)
+
+colnames(satisfaction) <- c("Satisfied", "Neutral", "Dissatisfied")
+rownames(satisfaction) <- c("North", "South", "East", "West")
+
+satisfaction
+
+
+```
